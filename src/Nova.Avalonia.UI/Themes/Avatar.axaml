@@ -1,0 +1,170 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nova.Avalonia.UI.Controls">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <!-- Default Avatar Theme -->
+            <ControlTheme x:Key="{x:Type controls:Avatar}" TargetType="controls:Avatar">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="ClipToBounds" Value="True" />
+                <Setter Property="StatusColor" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid>
+                            <Border x:Name="PART_Container"
+                                    Background="{TemplateBinding BackgroundColor}"
+                                    ClipToBounds="True">
+                                <Grid>
+                                    <Image x:Name="PART_Image"
+                                           Source="{TemplateBinding ImageSource}"
+                                           Stretch="UniformToFill"
+                                           IsVisible="False" />
+                                    <TextBlock x:Name="PART_Initials"
+                                               Text="{TemplateBinding Initials}"
+                                               Foreground="{TemplateBinding ForegroundColor}"
+                                               FontWeight="SemiBold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               IsVisible="False" />
+                                    <ContentControl x:Name="PART_Icon"
+                                                    Content="{TemplateBinding Icon}"
+                                                    Foreground="{TemplateBinding ForegroundColor}"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    IsVisible="False" />
+                                    <ContentPresenter x:Name="PART_Content"
+                                                      Content="{TemplateBinding Content}"
+                                                      HorizontalContentAlignment="Center"
+                                                      VerticalContentAlignment="Center"
+                                                      IsVisible="False" />
+                                </Grid>
+                            </Border>
+                            <Border x:Name="PART_StatusIndicator"
+                                    BorderBrush="White"
+                                    BorderThickness="2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Margin="2"
+                                    IsVisible="False" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- Bordered Avatar -->
+            <ControlTheme x:Key="BorderedAvatar"
+                          TargetType="controls:Avatar"
+                          BasedOn="{StaticResource {x:Type controls:Avatar}}">
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid>
+                            <Border x:Name="PART_Container"
+                                    Background="{TemplateBinding BackgroundColor}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="2"
+                                    ClipToBounds="True">
+                                <Grid>
+                                    <Image x:Name="PART_Image"
+                                           Source="{TemplateBinding ImageSource}"
+                                           Stretch="UniformToFill"
+                                           IsVisible="False" />
+                                    <TextBlock x:Name="PART_Initials"
+                                               Text="{TemplateBinding Initials}"
+                                               Foreground="{TemplateBinding ForegroundColor}"
+                                               FontWeight="SemiBold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               IsVisible="False" />
+                                    <ContentControl x:Name="PART_Icon"
+                                                    Content="{TemplateBinding Icon}"
+                                                    Foreground="{TemplateBinding ForegroundColor}"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    IsVisible="False" />
+                                    <ContentPresenter x:Name="PART_Content"
+                                                      Content="{TemplateBinding Content}"
+                                                      HorizontalContentAlignment="Center"
+                                                      VerticalContentAlignment="Center"
+                                                      IsVisible="False" />
+                                </Grid>
+                            </Border>
+                            <Border x:Name="PART_StatusIndicator"
+                                    BorderBrush="White"
+                                    BorderThickness="2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Margin="2"
+                                    IsVisible="False" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- Avatar with Shadow -->
+            <ControlTheme x:Key="ShadowAvatar"
+                          TargetType="controls:Avatar"
+                          BasedOn="{StaticResource {x:Type controls:Avatar}}">
+                <Setter Property="ClipToBounds" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel>
+                            <Border CornerRadius="{Binding #PART_Container.CornerRadius}"
+                                    Background="Black"
+                                    Opacity="1"
+                                    Margin="0"
+                                    BoxShadow="0 4 6 0 #40000000"
+                                    IsHitTestVisible="False" />
+                            <Grid>
+                                <Border x:Name="PART_Container"
+                                        Background="{TemplateBinding BackgroundColor}"
+                                        ClipToBounds="True">
+                                    <Grid>
+                                        <Image x:Name="PART_Image"
+                                               Source="{TemplateBinding ImageSource}"
+                                               Stretch="UniformToFill"
+                                               IsVisible="False" />
+                                        <TextBlock x:Name="PART_Initials"
+                                                   Text="{TemplateBinding Initials}"
+                                                   Foreground="{TemplateBinding ForegroundColor}"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   IsVisible="False" />
+                                        <ContentControl x:Name="PART_Icon"
+                                                        Content="{TemplateBinding Icon}"
+                                                        Foreground="{TemplateBinding ForegroundColor}"
+                                                        HorizontalContentAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        IsVisible="False" />
+                                        <ContentPresenter x:Name="PART_Content"
+                                                          Content="{TemplateBinding Content}"
+                                                          HorizontalContentAlignment="Center"
+                                                          VerticalContentAlignment="Center"
+                                                          IsVisible="False" />
+                                    </Grid>
+                                </Border>
+                                <Border x:Name="PART_StatusIndicator"
+                                        BorderBrush="White"
+                                        BorderThickness="2"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Margin="2"
+                                        IsVisible="False" />
+                            </Grid>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- AvatarGroup Theme -->
+            <ControlTheme x:Key="{x:Type controls:AvatarGroup}" TargetType="controls:AvatarGroup">
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <controls:AvatarStackPanel x:Name="PART_Container"
+                                                   Background="Transparent" />
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Nova.Avalonia.UI.Gallery.ViewModels"
+             xmlns:views="using:Nova.Avalonia.UI.Gallery.Views"
+             mc:Ignorable="d"
+             x:Class="Nova.Avalonia.UI.Gallery.Views.NavigationMenuView"
+             x:DataType="vm:NavigationMenuViewModel">
+    <Design.DataContext>
+        <vm:NavigationMenuViewModel />
+    </Design.DataContext>
+
+    <StackPanel Spacing="12" Margin="12">
+        <ItemsControl ItemsSource="{Binding $parent[views:MainView].((vm:MainViewModel)DataContext).Samples}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:NavigationSample">
+                    <Button Command="{Binding $parent[views:MainView].((vm:MainViewModel)DataContext).NavigateToCommand}"
+                            CommandParameter="{Binding}"
+                            Background="{DynamicResource CardBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            CornerRadius="12"
+                            HorizontalContentAlignment="Stretch"
+                            Padding="12"
+                            Margin="0, 6"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Title}"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Description}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}" />
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
