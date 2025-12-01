@@ -1,0 +1,276 @@
+{
+  "source_base_path": "/Users/jsuarezruiz/Documents/GitHub/Nova.Avalonia.UI/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.Avatar.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.Avatar.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.Avatar",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.Avatar.yml\" sourcestartlinenumber=\"1\">Extensible Avatar control that displays user images, initials, icons, or custom content.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarAutomationPeer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarAutomationPeer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarAutomationPeer",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarAutomationPeer.yml\" sourcestartlinenumber=\"1\">Exposes <xref href=\"Nova.Avalonia.UI.Controls.Avatar\" data-throw-if-not-resolved=\"false\"></xref> to accessibility APIs.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarDisplayMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarDisplayMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarDisplayMode",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarDisplayMode.yml\" sourcestartlinenumber=\"1\">Display mode for the Avatar control.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarGroup.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarGroup",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarGroup.yml\" sourcestartlinenumber=\"1\">Displays a group of avatars in a stacked or row layout with configurable overlap and overflow handling.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer.yml\" sourcestartlinenumber=\"1\">Exposes <xref href=\"Nova.Avalonia.UI.Controls.AvatarGroup\" data-throw-if-not-resolved=\"false\"></xref> to accessibility APIs.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarShape",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarShape.yml\" sourcestartlinenumber=\"1\">Shape of the Avatar.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarSize.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarSize.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarSize",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarSize.yml\" sourcestartlinenumber=\"1\">Predefined sizes for Avatar.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarStackPanel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarStackPanel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarStackPanel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.AvatarStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.AvatarStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.AvatarStatus",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.AvatarStatus.yml\" sourcestartlinenumber=\"1\">Status indicator for Avatar (online status, notifications, etc.).\nDefault colors are provided by the Avatar control; set StatusColor to override.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.Shimmer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.Shimmer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.Shimmer",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.Shimmer.yml\" sourcestartlinenumber=\"1\">A content-aware skeleton loading control.\nUses immediate mode rendering to draw a &quot;shimmer&quot; effect over the content layout.\nAutomatically detects text, shapes, and buttons to generate matching placeholders.\nIncludes A11y support and a synchronized animation clock to prevent visual clutter.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.ShimmerAutomationPeer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.ShimmerAutomationPeer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.ShimmerAutomationPeer",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.ShimmerAutomationPeer.yml\" sourcestartlinenumber=\"1\">Automation peer for the <xref href=\"Nova.Avalonia.UI.Controls.Shimmer\" data-throw-if-not-resolved=\"false\"></xref> control, exposed as a loading indicator.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/controls/avatar.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/controls/avatar.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/controls/shimmer.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/controls/shimmer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

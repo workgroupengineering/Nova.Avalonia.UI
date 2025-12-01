@@ -1,0 +1,138 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nova.Avalonia.UI.Controls
+  commentId: N:Nova.Avalonia.UI.Controls
+  id: Nova.Avalonia.UI.Controls
+  children:
+  - Nova.Avalonia.UI.Controls.Avatar
+  - Nova.Avalonia.UI.Controls.AvatarAutomationPeer
+  - Nova.Avalonia.UI.Controls.AvatarDisplayMode
+  - Nova.Avalonia.UI.Controls.AvatarGroup
+  - Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer
+  - Nova.Avalonia.UI.Controls.AvatarShape
+  - Nova.Avalonia.UI.Controls.AvatarSize
+  - Nova.Avalonia.UI.Controls.AvatarStackPanel
+  - Nova.Avalonia.UI.Controls.AvatarStatus
+  - Nova.Avalonia.UI.Controls.Shimmer
+  - Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
+  langs:
+  - csharp
+  - vb
+  name: Nova.Avalonia.UI.Controls
+  nameWithType: Nova.Avalonia.UI.Controls
+  fullName: Nova.Avalonia.UI.Controls
+  type: Namespace
+  assemblies:
+  - Nova.Avalonia.UI
+references:
+- uid: Nova.Avalonia.UI.Controls.Avatar
+  commentId: T:Nova.Avalonia.UI.Controls.Avatar
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.Avatar.html
+  name: Avatar
+  nameWithType: Avatar
+  fullName: Nova.Avalonia.UI.Controls.Avatar
+- uid: Nova.Avalonia.UI.Controls.AvatarAutomationPeer
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarAutomationPeer
+  href: Nova.Avalonia.UI.Controls.AvatarAutomationPeer.html
+  name: AvatarAutomationPeer
+  nameWithType: AvatarAutomationPeer
+  fullName: Nova.Avalonia.UI.Controls.AvatarAutomationPeer
+- uid: Nova.Avalonia.UI.Controls.AvatarDisplayMode
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarDisplayMode
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.AvatarDisplayMode.html
+  name: AvatarDisplayMode
+  nameWithType: AvatarDisplayMode
+  fullName: Nova.Avalonia.UI.Controls.AvatarDisplayMode
+- uid: Nova.Avalonia.UI.Controls.AvatarGroup
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarGroup
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.AvatarGroup.html
+  name: AvatarGroup
+  nameWithType: AvatarGroup
+  fullName: Nova.Avalonia.UI.Controls.AvatarGroup
+- uid: Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer
+  href: Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer.html
+  name: AvatarGroupAutomationPeer
+  nameWithType: AvatarGroupAutomationPeer
+  fullName: Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer
+- uid: Nova.Avalonia.UI.Controls.AvatarShape
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarShape
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.AvatarShape.html
+  name: AvatarShape
+  nameWithType: AvatarShape
+  fullName: Nova.Avalonia.UI.Controls.AvatarShape
+- uid: Nova.Avalonia.UI.Controls.AvatarSize
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarSize
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.AvatarSize.html
+  name: AvatarSize
+  nameWithType: AvatarSize
+  fullName: Nova.Avalonia.UI.Controls.AvatarSize
+- uid: Nova.Avalonia.UI.Controls.AvatarStackPanel
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarStackPanel
+  href: Nova.Avalonia.UI.Controls.AvatarStackPanel.html
+  name: AvatarStackPanel
+  nameWithType: AvatarStackPanel
+  fullName: Nova.Avalonia.UI.Controls.AvatarStackPanel
+- uid: Nova.Avalonia.UI.Controls.AvatarStatus
+  commentId: T:Nova.Avalonia.UI.Controls.AvatarStatus
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.AvatarStatus.html
+  name: AvatarStatus
+  nameWithType: AvatarStatus
+  fullName: Nova.Avalonia.UI.Controls.AvatarStatus
+- uid: Nova.Avalonia.UI.Controls.Shimmer
+  commentId: T:Nova.Avalonia.UI.Controls.Shimmer
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.Shimmer.html
+  name: Shimmer
+  nameWithType: Shimmer
+  fullName: Nova.Avalonia.UI.Controls.Shimmer
+- uid: Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
+  commentId: T:Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
+  href: Nova.Avalonia.UI.Controls.ShimmerAutomationPeer.html
+  name: ShimmerAutomationPeer
+  nameWithType: ShimmerAutomationPeer
+  fullName: Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
+- uid: Nova.Avalonia.UI.Controls
+  commentId: N:Nova.Avalonia.UI.Controls
+  href: Nova.html
+  name: Nova.Avalonia.UI.Controls
+  nameWithType: Nova.Avalonia.UI.Controls
+  fullName: Nova.Avalonia.UI.Controls
+  spec.csharp:
+  - uid: Nova
+    name: Nova
+    href: Nova.html
+  - name: .
+  - uid: Nova.Avalonia
+    name: Avalonia
+    href: Nova.Avalonia.html
+  - name: .
+  - uid: Nova.Avalonia.UI
+    name: UI
+    href: Nova.Avalonia.UI.html
+  - name: .
+  - uid: Nova.Avalonia.UI.Controls
+    name: Controls
+    href: Nova.Avalonia.UI.Controls.html
+  spec.vb:
+  - uid: Nova
+    name: Nova
+    href: Nova.html
+  - name: .
+  - uid: Nova.Avalonia
+    name: Avalonia
+    href: Nova.Avalonia.html
+  - name: .
+  - uid: Nova.Avalonia.UI
+    name: UI
+    href: Nova.Avalonia.UI.html
+  - name: .
+  - uid: Nova.Avalonia.UI.Controls
+    name: Controls
+    href: Nova.Avalonia.UI.Controls.html

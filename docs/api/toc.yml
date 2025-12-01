@@ -1,0 +1,40 @@
+### YamlMime:TableOfContent
+items:
+- uid: Nova.Avalonia.UI.Controls
+  name: Nova.Avalonia.UI.Controls
+  type: Namespace
+  items:
+  - uid: Nova.Avalonia.UI.Controls.Avatar
+    name: Avatar
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.AvatarAutomationPeer
+    name: AvatarAutomationPeer
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.AvatarDisplayMode
+    name: AvatarDisplayMode
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.AvatarGroup
+    name: AvatarGroup
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.AvatarGroupAutomationPeer
+    name: AvatarGroupAutomationPeer
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.AvatarShape
+    name: AvatarShape
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.AvatarSize
+    name: AvatarSize
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.AvatarStackPanel
+    name: AvatarStackPanel
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.AvatarStatus
+    name: AvatarStatus
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.Shimmer
+    name: Shimmer
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
+    name: ShimmerAutomationPeer
+    type: Class
+memberLayout: SamePage
