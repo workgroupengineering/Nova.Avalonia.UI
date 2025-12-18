@@ -18,6 +18,12 @@ The `Avatar` control presents a person's identity using an image, initials, icon
 
 <img src="images/novaui_avatar_light.gif" alt="Avatar" width="250" />
 
+### Badge
+
+The `Badge` control displays a notification badge on top of other content. It supports numeric counts with overflow handling (e.g., "99+"), dot mode, various placements, and customizable styling.
+
+<img src="images/novaui_badge_light.gif" alt="Badge" width="250" />
+
 ### RatingControl
 
 The `RatingControl` allows users to view and set ratings using interactive items such as stars, hearts, or custom shapes. It supports multiple precision levels, customizable appearance, and full keyboard and pointer interaction.
