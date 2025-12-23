@@ -33,8 +33,6 @@ public class Badge : ContentControl
         MaxCountProperty.Changed.AddClassHandler<Badge>((x, e) => x.UpdateDisplayContent());
     }
 
-    #region Styled Properties
-
     /// <summary>
     /// Defines the <see cref="BadgeContent"/> property.
     /// </summary>
@@ -100,10 +98,6 @@ public class Badge : ContentControl
     /// </summary>
     public static readonly DirectProperty<Badge, object?> DisplayContentProperty = 
         AvaloniaProperty.RegisterDirect<Badge, object?>(nameof(DisplayContent), o => o.DisplayContent);
-
-    #endregion
-
-    #region Properties
 
     private object? _displayContent;
 
@@ -206,11 +200,8 @@ public class Badge : ContentControl
         set => SetValue(MaxCountProperty, value); 
     }
 
-    #endregion
-
     private Border? _badgeContainer;
-
-    // 1. Override to provide the custom peer
+    
     protected override AutomationPeer OnCreateAutomationPeer()
     {
         return new BadgeAutomationPeer(this);
@@ -235,9 +226,6 @@ public class Badge : ContentControl
     {
         UpdateLayoutState();
         UpdateDisplayContent();
-        
-        // NOTE: We do NOT manually notify the peer here. 
-        // The peer listens to PropertyChanged events itself.
     }
 
     private void UpdateDisplayContent()

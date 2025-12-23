@@ -20,10 +20,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
     {
         private Control? _surface;
         private TextBlock? _caption;
-
-        // Internal caching fields to optimize rendering performance
-        // We cache the BitMatrix to avoid re-encoding data (slow)
-        // We cache the RenderTargetBitmap to avoid re-drawing thousands of rectangles every frame (slow)
         private BitMatrix? _cachedMatrix;
         private RenderTargetBitmap? _cachedBitmap;
         private string _lastValue = "";
@@ -260,7 +256,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             var result = base.ArrangeOverride(finalSize);
             
             // If the control size changes significantly, the cached bitmap is invalid
-            // We use a small threshold (1px) to avoid regenerating on sub-pixel layout shifts
             if (_cachedBitmap != null && 
                 (Math.Abs(_lastRenderSize.Width - result.Width) > 1 || 
                  Math.Abs(_lastRenderSize.Height - result.Height) > 1))
@@ -329,7 +324,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
                     h = Math.Max(h, 100);
                 }
 
-                // Heavy operation: Encoding the string into a matrix
                 var matrix = new MultiFormatWriter().encode(Value, format, w, h, hints);
 
                 // Cache the result
@@ -366,18 +360,15 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
                 ? renderBounds
                 : new Rect(_surface.Bounds.Size).WithX(_surface.Bounds.X).WithY(_surface.Bounds.Y);
 
-            // Background is cheap to draw, do it every frame
             context.FillRectangle(BackgroundBrush, renderBounds);
-
-            // PERFORMANCE OPTIMIZATION:
-            // Drawing thousands of tiny rectangles for a barcode is expensive in immediate mode.
+            
             // We render the barcode once into a RenderTargetBitmap and reuse that bitmap
             // on subsequent frames until the data or size changes.
             if (_cachedBitmap != null)
             {
                 context.DrawImage(_cachedBitmap, target);
                 
-                // Draw logo overlay for QR codes on every render (not cached)
+                // Draw logo overlay for QR codes
                 DrawLogoIfNeeded(context, target);
                 return;
             }
@@ -385,13 +376,11 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             var matrix = GetOrCreateMatrix(target.Size);
             if (matrix == null) return;
             
-            // Create a new off-screen bitmap
             var pixelSize = new PixelSize((int)Math.Max(1, target.Width), (int)Math.Max(1, target.Height));
             var rtb = new RenderTargetBitmap(pixelSize);
 
             using (var rtbContext = rtb.CreateDrawingContext())
             {
-                // Render the detailed barcode geometry onto the off-screen bitmap
                 var operation = new BarcodeDrawOperation(new Rect(rtb.Size), matrix, BarBrush);
                 rtbContext.Custom(operation);
             }
@@ -399,7 +388,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             _cachedBitmap = rtb;
             context.DrawImage(_cachedBitmap, target);
             
-            // Draw logo overlay for QR codes if specified
             DrawLogoIfNeeded(context, target);
         }
         
@@ -413,8 +401,7 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
                     target.Y + (target.Height - logoSize) / 2,
                     logoSize,
                     logoSize);
-                
-                // Draw white background behind logo for readability
+
                 context.FillRectangle(BackgroundBrush, logoRect);
                 context.DrawImage(Logo, logoRect);
             }
@@ -425,8 +412,7 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             _cachedBitmap?.Dispose();
             _cachedBitmap = null;
         }
-
-        // Helper to map enum to ZXing format
+        
         private static BarcodeFormat ToFormat(BarcodeSymbology s) => s switch
         {
             BarcodeSymbology.QRCode => BarcodeFormat.QR_CODE,
@@ -445,7 +431,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             _ => BarcodeFormat.QR_CODE
         };
         
-        // Helper to detect 1D barcodes for sizing constraints
         private static bool Is1DBarcode(BarcodeSymbology s) => s switch
         {
             BarcodeSymbology.Code128 or BarcodeSymbology.Code39 or BarcodeSymbology.Code93 or
@@ -454,7 +439,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             _ => false
         };
         
-        // Helper to convert enum to ZXing error correction level for QR codes
         private static object ToZXingErrorCorrectionLevel(QRErrorCorrectionLevel level) => level switch
         {
             QRErrorCorrectionLevel.L => ZXing.QrCode.Internal.ErrorCorrectionLevel.L,
@@ -464,7 +448,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
             _ => ZXing.QrCode.Internal.ErrorCorrectionLevel.M
         };
         
-        // Helper to convert enum to Aztec error correction level (integer percentage 1-99)
         private static int ToAztecErrorCorrectionLevel(QRErrorCorrectionLevel level) => level switch
         {
             QRErrorCorrectionLevel.L => 15,  // Low - ~15% error recovery
@@ -520,9 +503,6 @@ namespace Nova.Avalonia.UI.BarcodeGenerator;
                     double ry = top + y * scale;
                     int run = -1;
                     
-                    // Run-length encoding optimization:
-                    // Instead of drawing 1x1 rectangles for every pixel, we group consecutive
-                    // black pixels into a single wider rectangle to reduce draw calls.
                     for (var x = 0; x < _matrix.Width; x++)
                     {
                         var on = _matrix[x, y];
