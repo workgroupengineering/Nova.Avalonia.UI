@@ -13,6 +13,14 @@ items:
   - Nova.Avalonia.UI.Controls.AvatarSize
   - Nova.Avalonia.UI.Controls.AvatarStackPanel
   - Nova.Avalonia.UI.Controls.AvatarStatus
+  - Nova.Avalonia.UI.Controls.Badge
+  - Nova.Avalonia.UI.Controls.BadgeAutomationPeer
+  - Nova.Avalonia.UI.Controls.BadgeKind
+  - Nova.Avalonia.UI.Controls.BadgePlacement
+  - Nova.Avalonia.UI.Controls.RatingControl
+  - Nova.Avalonia.UI.Controls.RatingItem
+  - Nova.Avalonia.UI.Controls.RatingPrecision
+  - Nova.Avalonia.UI.Controls.RatingShape
   - Nova.Avalonia.UI.Controls.Shimmer
   - Nova.Avalonia.UI.Controls.ShimmerAutomationPeer
   langs:
@@ -85,6 +93,59 @@ references:
   name: AvatarStatus
   nameWithType: AvatarStatus
   fullName: Nova.Avalonia.UI.Controls.AvatarStatus
+- uid: Nova.Avalonia.UI.Controls.Badge
+  commentId: T:Nova.Avalonia.UI.Controls.Badge
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.Badge.html
+  name: Badge
+  nameWithType: Badge
+  fullName: Nova.Avalonia.UI.Controls.Badge
+- uid: Nova.Avalonia.UI.Controls.BadgeAutomationPeer
+  commentId: T:Nova.Avalonia.UI.Controls.BadgeAutomationPeer
+  href: Nova.Avalonia.UI.Controls.BadgeAutomationPeer.html
+  name: BadgeAutomationPeer
+  nameWithType: BadgeAutomationPeer
+  fullName: Nova.Avalonia.UI.Controls.BadgeAutomationPeer
+- uid: Nova.Avalonia.UI.Controls.BadgeKind
+  commentId: T:Nova.Avalonia.UI.Controls.BadgeKind
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.BadgeKind.html
+  name: BadgeKind
+  nameWithType: BadgeKind
+  fullName: Nova.Avalonia.UI.Controls.BadgeKind
+- uid: Nova.Avalonia.UI.Controls.BadgePlacement
+  commentId: T:Nova.Avalonia.UI.Controls.BadgePlacement
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.BadgePlacement.html
+  name: BadgePlacement
+  nameWithType: BadgePlacement
+  fullName: Nova.Avalonia.UI.Controls.BadgePlacement
+- uid: Nova.Avalonia.UI.Controls.RatingControl
+  commentId: T:Nova.Avalonia.UI.Controls.RatingControl
+  href: Nova.Avalonia.UI.Controls.RatingControl.html
+  name: RatingControl
+  nameWithType: RatingControl
+  fullName: Nova.Avalonia.UI.Controls.RatingControl
+- uid: Nova.Avalonia.UI.Controls.RatingItem
+  commentId: T:Nova.Avalonia.UI.Controls.RatingItem
+  href: Nova.Avalonia.UI.Controls.RatingItem.html
+  name: RatingItem
+  nameWithType: RatingItem
+  fullName: Nova.Avalonia.UI.Controls.RatingItem
+- uid: Nova.Avalonia.UI.Controls.RatingPrecision
+  commentId: T:Nova.Avalonia.UI.Controls.RatingPrecision
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.RatingPrecision.html
+  name: RatingPrecision
+  nameWithType: RatingPrecision
+  fullName: Nova.Avalonia.UI.Controls.RatingPrecision
+- uid: Nova.Avalonia.UI.Controls.RatingShape
+  commentId: T:Nova.Avalonia.UI.Controls.RatingShape
+  parent: Nova.Avalonia.UI.Controls
+  href: Nova.Avalonia.UI.Controls.RatingShape.html
+  name: RatingShape
+  nameWithType: RatingShape
+  fullName: Nova.Avalonia.UI.Controls.RatingShape
 - uid: Nova.Avalonia.UI.Controls.Shimmer
   commentId: T:Nova.Avalonia.UI.Controls.Shimmer
   parent: Nova.Avalonia.UI.Controls

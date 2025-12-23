@@ -52,6 +52,66 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../images/novaui_badge_dark.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_badge_dark.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/novaui_badge_light.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_badge_light.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/novaui_barcodegenerator_dark.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_barcodegenerator_dark.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/novaui_barcodegenerator_light.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_barcodegenerator_light.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/novaui_ratingcontrol_dark.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_ratingcontrol_dark.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/novaui_ratingcontrol_light.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/novaui_ratingcontrol_light.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../images/novaui_shimmer_dark.gif",
       "output": {
         "resource": {
@@ -66,6 +126,16 @@
       "output": {
         "resource": {
           "relative_path": "images/novaui_shimmer_light.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../images/promo-banner.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/promo-banner.png"
         }
       },
       "version": ""
@@ -198,6 +268,118 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.Badge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.Badge.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.Badge",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.Badge.yml\" sourcestartlinenumber=\"1\">A notification badge control that can wrap content (buttons, icons) and display\na count, text, or dot indicator at a configurable position.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.BadgeAutomationPeer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.BadgeAutomationPeer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.BadgeAutomationPeer",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.BadgeAutomationPeer.yml\" sourcestartlinenumber=\"1\">Custom AutomationPeer for the Badge control.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.BadgeKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.BadgeKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.BadgeKind",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.BadgeKind.yml\" sourcestartlinenumber=\"1\">Specifies the visual style of the badge.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.BadgePlacement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.BadgePlacement.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.BadgePlacement",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.BadgePlacement.yml\" sourcestartlinenumber=\"1\">Specifies the placement of the badge relative to its wrapped content.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.RatingControl.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.RatingControl.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.RatingControl",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.RatingControl.yml\" sourcestartlinenumber=\"1\">A Rating Control with support to various shapes or precision levels.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.RatingItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.RatingItem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.RatingItem",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.RatingItem.yml\" sourcestartlinenumber=\"1\">Represents an individual item within the RatingControl (e.g., a single star).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.RatingPrecision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.RatingPrecision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.RatingPrecision",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.RatingPrecision.yml\" sourcestartlinenumber=\"1\">Specifies the precision level of the RatingControl.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nova.Avalonia.UI.Controls.RatingShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nova.Avalonia.UI.Controls.RatingShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Nova.Avalonia.UI.Controls.RatingShape",
+      "Summary": "<p sourcefile=\"api/Nova.Avalonia.UI.Controls.RatingShape.yml\" sourcestartlinenumber=\"1\">Specifies the shape of the items in the RatingControl.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Nova.Avalonia.UI.Controls.Shimmer.yml",
       "output": {
         ".html": {
@@ -257,6 +439,36 @@
       "output": {
         ".html": {
           "relative_path": "docs/controls/avatar.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/controls/badge.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/controls/badge.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/controls/barcodegenerator.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/controls/barcodegenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/controls/ratingcontrol.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/controls/ratingcontrol.html"
         }
       },
       "version": ""

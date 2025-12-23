@@ -31,6 +31,30 @@ items:
   - uid: Nova.Avalonia.UI.Controls.AvatarStatus
     name: AvatarStatus
     type: Enum
+  - uid: Nova.Avalonia.UI.Controls.Badge
+    name: Badge
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.BadgeAutomationPeer
+    name: BadgeAutomationPeer
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.BadgeKind
+    name: BadgeKind
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.BadgePlacement
+    name: BadgePlacement
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.RatingControl
+    name: RatingControl
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.RatingItem
+    name: RatingItem
+    type: Class
+  - uid: Nova.Avalonia.UI.Controls.RatingPrecision
+    name: RatingPrecision
+    type: Enum
+  - uid: Nova.Avalonia.UI.Controls.RatingShape
+    name: RatingShape
+    type: Enum
   - uid: Nova.Avalonia.UI.Controls.Shimmer
     name: Shimmer
     type: Class
