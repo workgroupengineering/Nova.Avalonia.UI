@@ -38,6 +38,7 @@ public partial class MainViewModel : ViewModelBase
                 new("BubblePanel", new BubblePanelViewModel(), "Circle packing layout panel"),
                 new("CircularPanel", new CircularPanelViewModel(), "Circular layout panel"),
                 new("HexPanel", new HexPanelViewModel(), "Honeycomb hexagonal grid layout"),
+                new("LoopPanel", new LoopPanelViewModel(), "Infinite looping scroll panel"),
                 new("OrbitPanel", new OrbitPanelViewModel(), "Concentric orbit rings layout"),
                 new("OverlapPanel", new OverlapPanelViewModel(), "Stacked cards with offset"),
                 new("RadialPanel", new RadialPanelViewModel(), "Radial fan layout"),

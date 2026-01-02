@@ -27,6 +27,7 @@ ms.date: 2026-01-02
 - **[BubblePanel](xref:Nova.Avalonia.UI.Controls.BubblePanel)**: Packs circular items using a circle packing algorithm for dense, organic layouts.
 - **[CircularPanel](xref:Nova.Avalonia.UI.Controls.CircularPanel)**: Arranges items evenly around a circle, perfect for radial menus or clock faces.
 - **[HexPanel](xref:Nova.Avalonia.UI.Controls.HexPanel)**: Layout panel that arranges items in a honeycomb hexagonal grid.
+- **[LoopPanel](xref:Nova.Avalonia.UI.Controls.LoopPanel)**: Infinite scrolling panel with looping, inertia, and snap-to-item behavior.
 - **[OrbitPanel](xref:Nova.Avalonia.UI.Controls.OrbitPanel)**: Arranges child elements in concentric orbit rings around a center point.
 - **[OverlapPanel](xref:Nova.Avalonia.UI.Controls.OverlapPanel)**: Stacks children with configurable X/Y offsets for card pile effects.
 - **[RadialPanel](xref:Nova.Avalonia.UI.Controls.RadialPanel)**: Arranges items in a circular or spiral fan arrangement.

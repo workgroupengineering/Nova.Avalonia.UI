@@ -20,6 +20,8 @@
     href: controls/circularpanel.md
   - name: HexPanel
     href: controls/hexpanel.md
+  - name: LoopPanel
+    href: controls/looppanel.md
   - name: OrbitPanel
     href: controls/orbitpanel.md
   - name: OverlapPanel

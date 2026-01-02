@@ -64,6 +64,10 @@ The `CircularPanel` arranges items evenly around a circle. Perfect for radial me
 
 The `HexPanel` arranges items in a honeycomb hexagonal grid. It supports both flat-topped and pointy-topped hexagons.
 
+### LoopPanel
+
+The `LoopPanel` creates an infinite scrolling experience where children wrap seamlessly. It supports drag gestures, mouse wheel, momentum (inertia), and snap-to-item behavior.
+
 ### OrbitPanel
 
 The `OrbitPanel` arranges child elements in concentric orbit rings around a center point. Items are distributed evenly radiating from the center.
