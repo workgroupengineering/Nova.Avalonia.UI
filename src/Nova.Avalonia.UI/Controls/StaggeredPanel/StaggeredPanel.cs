@@ -35,9 +35,7 @@ public class StaggeredPanel : Panel
     public static readonly StyledProperty<Thickness> PaddingProperty =
         AvaloniaProperty.Register<StaggeredPanel, Thickness>(nameof(Padding));
 
-    // Cached layout values from Measure for use in Arrange
-    private int _cachedColumnCount = 1;
-    private double _cachedColumnWidth = 250;
+
 
     /// <summary>
     /// Gets or sets the desired width for each column.
@@ -89,27 +87,7 @@ public class StaggeredPanel : Panel
         double desiredColumnWidth = Math.Max(1, DesiredColumnWidth);
 
         // Calculate column count
-        int columnCount = 1;
-
-        if (double.IsInfinity(availableWidth) || double.IsNaN(availableWidth))
-        {
-            columnCount = 1;
-        }
-        else if (desiredColumnWidth + columnSpacing > 0)
-        {
-            columnCount = Math.Max(1, (int)((availableWidth + columnSpacing) / (desiredColumnWidth + columnSpacing)));
-        }
-
-        // Calculate actual column width
-        double actualColumnWidth = desiredColumnWidth;
-        if (!double.IsInfinity(availableWidth) && !double.IsNaN(availableWidth) && columnCount > 0)
-        {
-            actualColumnWidth = Math.Max(1, (availableWidth - (columnCount - 1) * columnSpacing) / columnCount);
-        }
-
-        // Cache for arrange phase
-        _cachedColumnCount = columnCount;
-        _cachedColumnWidth = actualColumnWidth;
+        var (columnCount, actualColumnWidth) = GetColumnMetrics(availableWidth, desiredColumnWidth, columnSpacing);
 
         var columnHeights = new double[columnCount];
         
@@ -141,12 +119,13 @@ public class StaggeredPanel : Panel
     protected override Size ArrangeOverride(Size finalSize)
     {
         var padding = Padding;
+        double availableWidth = Math.Max(0, finalSize.Width - padding.Left - padding.Right);
         double rowSpacing = RowSpacing;
         double columnSpacing = ColumnSpacing;
+        double desiredColumnWidth = Math.Max(1, DesiredColumnWidth);
 
-        // Use cached values from measure phase for consistency
-        int columnCount = _cachedColumnCount;
-        double actualColumnWidth = _cachedColumnWidth;
+        // Recalculate values ensures consistency even if Measure was called with different constraints
+        var (columnCount, actualColumnWidth) = GetColumnMetrics(availableWidth, desiredColumnWidth, columnSpacing);
 
         var columnHeights = new double[columnCount];
 
@@ -172,6 +151,28 @@ public class StaggeredPanel : Panel
 
         double maxHeight = columnHeights.DefaultIfEmpty(0).Max();
         return new Size(finalSize.Width, maxHeight + padding.Top + padding.Bottom);
+    }
+
+    private (int count, double width) GetColumnMetrics(double availableWidth, double desiredWidth, double spacing)
+    {
+        int count = 1;
+
+        if (double.IsInfinity(availableWidth) || double.IsNaN(availableWidth))
+        {
+            count = 1;
+        }
+        else if (desiredWidth + spacing > 0)
+        {
+            count = Math.Max(1, (int)((availableWidth + spacing) / (desiredWidth + spacing)));
+        }
+
+        double actualWidth = desiredWidth;
+        if (!double.IsInfinity(availableWidth) && !double.IsNaN(availableWidth) && count > 0)
+        {
+            actualWidth = Math.Max(1, (availableWidth - (count - 1) * spacing) / count);
+        }
+
+        return (count, actualWidth);
     }
 
     private int GetShortestColumnIndex(double[] heights)

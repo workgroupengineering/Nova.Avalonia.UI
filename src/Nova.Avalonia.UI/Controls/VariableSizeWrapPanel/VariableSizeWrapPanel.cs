@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -103,8 +104,8 @@ public class VariableSizeWrapPanel : Panel
         double tileSize = TileSize;
         double spacing = Spacing;
 
-        // Track which cells are occupied
-        var grid = new bool[1000, columns]; // Up to 1000 rows
+        // List of rows, where each row is a bool[] of size 'columns'
+        var grid = new List<bool[]>();
         int maxRow = 0;
 
         foreach (var child in visibleChildren)
@@ -116,7 +117,7 @@ public class VariableSizeWrapPanel : Panel
             var (row, col) = FindAvailablePosition(grid, columns, colSpan, rowSpan);
 
             // Mark cells as occupied
-            MarkCells(grid, row, col, rowSpan, colSpan, true);
+            MarkCells(grid, columns, row, col, rowSpan, colSpan, true);
 
             maxRow = Math.Max(maxRow, row + rowSpan);
 
@@ -142,7 +143,7 @@ public class VariableSizeWrapPanel : Panel
         double tileSize = TileSize;
         double spacing = Spacing;
 
-        var grid = new bool[1000, columns];
+        var grid = new List<bool[]>();
         int maxRow = 0;
 
         foreach (var child in visibleChildren)
@@ -151,7 +152,7 @@ public class VariableSizeWrapPanel : Panel
             int rowSpan = Math.Max(1, GetRowSpan(child));
 
             var (row, col) = FindAvailablePosition(grid, columns, colSpan, rowSpan);
-            MarkCells(grid, row, col, rowSpan, colSpan, true);
+            MarkCells(grid, columns, row, col, rowSpan, colSpan, true);
 
             maxRow = Math.Max(maxRow, row + rowSpan);
 
@@ -167,9 +168,10 @@ public class VariableSizeWrapPanel : Panel
         return new Size(finalSize.Width, totalHeight);
     }
 
-    private static (int row, int col) FindAvailablePosition(bool[,] grid, int columns, int colSpan, int rowSpan)
+    private static (int row, int col) FindAvailablePosition(List<bool[]> grid, int columns, int colSpan, int rowSpan)
     {
-        for (int row = 0; row < grid.GetLength(0); row++)
+        // Try to fit in existing rows
+        for (int row = 0; row < grid.Count; row++)
         {
             for (int col = 0; col <= columns - colSpan; col++)
             {
@@ -179,32 +181,44 @@ public class VariableSizeWrapPanel : Panel
                 }
             }
         }
-        return (0, 0);
+
+        // If not found in existing rows, place at the start of the first new row
+        return (grid.Count, 0);
     }
 
-    private static bool CanPlace(bool[,] grid, int startRow, int startCol, int rowSpan, int colSpan, int maxCols)
+    private static bool CanPlace(List<bool[]> grid, int startRow, int startCol, int rowSpan, int colSpan, int maxCols)
     {
         if (startCol + colSpan > maxCols)
             return false;
 
-        for (int r = startRow; r < startRow + rowSpan && r < grid.GetLength(0); r++)
+        for (int r = startRow; r < startRow + rowSpan; r++)
         {
+            // If the row doesn't exist yet, it's effectively empty, so we can place here (assuming subsequent rows also valid)
+            if (r >= grid.Count) 
+                continue;
+
             for (int c = startCol; c < startCol + colSpan; c++)
             {
-                if (grid[r, c])
+                if (grid[r][c])
                     return false;
             }
         }
         return true;
     }
 
-    private static void MarkCells(bool[,] grid, int startRow, int startCol, int rowSpan, int colSpan, bool value)
+    private static void MarkCells(List<bool[]> grid, int columns, int startRow, int startCol, int rowSpan, int colSpan, bool value)
     {
-        for (int r = startRow; r < startRow + rowSpan && r < grid.GetLength(0); r++)
+        // Ensure rows exist
+        while (grid.Count < startRow + rowSpan)
         {
-            for (int c = startCol; c < startCol + colSpan && c < grid.GetLength(1); c++)
+            grid.Add(new bool[columns]);
+        }
+
+        for (int r = startRow; r < startRow + rowSpan; r++)
+        {
+            for (int c = startCol; c < startCol + colSpan; c++)
             {
-                grid[r, c] = value;
+                grid[r][c] = value;
             }
         }
     }

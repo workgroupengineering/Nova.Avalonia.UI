@@ -313,7 +313,7 @@
             <!-- Interactive -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Interactive"
+                    <TextBlock Text="Playground"
                                FontSize="16"
                                FontWeight="Bold"
                                Foreground="{DynamicResource AccentBrush}"/>

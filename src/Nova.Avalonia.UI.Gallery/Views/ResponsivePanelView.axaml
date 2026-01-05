@@ -106,18 +106,18 @@
             <!-- Interactive -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Interactive" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
+                    <TextBlock Text="Playground" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
                     <TextBlock Text="Use the slider to simulate container width and see the layout adapt. Try different transition effects." Foreground="{DynamicResource SecondaryTextBrush}"/>
                     
                     <!-- Configuration Controls -->
                     <StackPanel Spacing="10" Margin="0,0,0,10">
                         <!-- Width Slider Row -->
-                        <Grid ColumnDefinitions="80, *">
+                        <Grid ColumnDefinitions="120, *">
                             <TextBlock Text="{Binding #InteractWidthSlider.Value, StringFormat='Width: \{0:0\}px'}" VerticalAlignment="Center" FontWeight="Bold"/>
                             <Slider Grid.Column="1" x:Name="InteractWidthSlider" Minimum="350" Maximum="1400" Value="650"/>
                         </Grid>
                         <!-- Transition Selector Row -->
-                        <Grid ColumnDefinitions="80, *">
+                        <Grid ColumnDefinitions="120, *">
                             <TextBlock Text="Transition:" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1" ItemsSource="{Binding Transitions}" SelectedItem="{Binding SelectedTransition}" HorizontalAlignment="Left" MinWidth="150"/>
                         </Grid>
@@ -237,22 +237,22 @@
                                                 <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0">
                                                     <StackPanel Orientation="Horizontal" Spacing="15">
                                                         <PathIcon Data="M19,15H15A3,3 0 0,1 12,18A3,3 0 0,1 9,15H5V5H19M19,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z" 
-                                                                  Foreground="White" Width="20" Height="20" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Inbox" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                                                                  Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" Width="20" Height="20" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Inbox" FontWeight="Bold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" VerticalAlignment="Center"/>
                                                     </StackPanel>
                                                 </Button>
                                                 <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0">
                                                     <StackPanel Orientation="Horizontal" Spacing="15">
                                                         <PathIcon Data="M2,21L23,12L2,3V10L17,12L2,14V21Z" 
-                                                                  Foreground="White" Width="20" Height="20" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Sent" Foreground="#CCFFFFFF" VerticalAlignment="Center"/>
+                                                                  Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" Width="20" Height="20" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Sent" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" VerticalAlignment="Center"/>
                                                     </StackPanel>
                                                 </Button>
                                                 <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0">
                                                     <StackPanel Orientation="Horizontal" Spacing="15">
                                                         <PathIcon Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" 
-                                                                  Foreground="White" Width="20" Height="20" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Trash" Foreground="#CCFFFFFF" VerticalAlignment="Center"/>
+                                                                  Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" Width="20" Height="20" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Trash" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" VerticalAlignment="Center"/>
                                                     </StackPanel>
                                                 </Button>
                                             </StackPanel>

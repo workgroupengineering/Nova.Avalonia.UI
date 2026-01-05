@@ -174,7 +174,7 @@
       <!-- Interactive Playground -->
       <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
         <StackPanel Spacing="15">
-          <TextBlock Text="Interactive Playground" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource AccentBrush}" />
+          <TextBlock Text="Playground" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}" />
 
           <Grid ColumnDefinitions="*, AUTO" Margin="0,0,0,10">
             <StackPanel Spacing="10" Margin="0,0,20,0">

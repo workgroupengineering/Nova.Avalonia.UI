@@ -16,7 +16,7 @@
             <!-- Interactive Playground -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="15">
-                    <TextBlock Text="Playground" FontWeight="Bold"/>
+                    <TextBlock Text="Playground" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
 
                     <!-- Controls -->
                     <WrapPanel Orientation="Horizontal">

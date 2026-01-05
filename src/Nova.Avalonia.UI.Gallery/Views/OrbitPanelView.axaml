@@ -45,7 +45,7 @@
             <!-- Configuration -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Configuration" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
+                    <TextBlock Text="Playground" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
                     
                     <Grid ColumnDefinitions="Auto, *, 50" RowDefinitions="Auto, Auto, Auto">
                         <TextBlock Text="Orbit Spacing" VerticalAlignment="Center" Margin="0,0,10,0"/>

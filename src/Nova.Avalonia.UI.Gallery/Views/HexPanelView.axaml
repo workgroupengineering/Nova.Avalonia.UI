@@ -52,7 +52,7 @@
             <!-- Layout Configuration -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Layout Configuration" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
+                    <TextBlock Text="Playground" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
                     <TextBlock Text="Adjust RowCount, ColumnCount, and Orientation." Foreground="{DynamicResource SecondaryTextBrush}"/>
 
                     <!-- Controls -->
