@@ -95,7 +95,10 @@ namespace Nova.Avalonia.UI.Controls
 
         // Occupied grid, reusable array for position finding
         private bool[] _occupiedGrid = Array.Empty<bool>();
+        private int[] _rowOccupiedCount = Array.Empty<int>();
         private int _occupiedGridRows;
+        private int _firstFreeRow;
+        private int _maxDirtyIndex = -1;
 
         private Rect _viewport;
         private double _lastMeasureWidth = -1;
@@ -217,7 +220,14 @@ namespace Nova.Avalonia.UI.Controls
         {
             base.OnItemsChanged(items, e);
 
-            if (e.Action == NotifyCollectionChangedAction.Reset)
+            bool isAppend = e.Action == NotifyCollectionChangedAction.Add && 
+                            e.NewStartingIndex >= _itemCacheCount;
+
+            if (e.Action == NotifyCollectionChangedAction.Reset ||
+                e.Action == NotifyCollectionChangedAction.Remove ||
+                e.Action == NotifyCollectionChangedAction.Replace ||
+                e.Action == NotifyCollectionChangedAction.Move ||
+                (e.Action == NotifyCollectionChangedAction.Add && !isAppend))
             {
                 RecycleAllContainers();
                 ClearCaches();
@@ -271,6 +281,7 @@ namespace Nova.Avalonia.UI.Controls
 
                 // Clear and prepare occupied grid
                 ClearOccupiedGrid();
+                _firstFreeRow = 0;
 
                 EnsureCaches(itemCount);
 
@@ -396,9 +407,9 @@ namespace Nova.Avalonia.UI.Controls
 
         private void FindPosition(int columns, int colSpan, int rowSpan, out int startRow, out int startCol)
         {
-            int currentRow = 0;
             startRow = 0;
             startCol = 0;
+            int currentRow = _firstFreeRow;
 
             while (true)
             {
@@ -438,17 +449,34 @@ namespace Nova.Avalonia.UI.Controls
             {
                 for (int c = 0; c < colSpan; c++)
                 {
-                    int idx = (startRow + r) * columns + (startCol + c);
+                    int rIndex = startRow + r;
+                    int idx = rIndex * columns + (startCol + c);
                     _occupiedGrid[idx] = true;
+                    if (idx > _maxDirtyIndex) _maxDirtyIndex = idx;
+                    _rowOccupiedCount[rIndex]++;
                 }
+            }
+
+
+            // Update first free row if the current one is full
+            while (_firstFreeRow < _occupiedGridRows && _rowOccupiedCount[_firstFreeRow] >= columns)
+            {
+                _firstFreeRow++;
             }
         }
 
         private void ClearOccupiedGrid()
         {
+            if (_maxDirtyIndex >= 0)
+            {
+                int lengthToClear = Math.Min(_maxDirtyIndex + 1, _occupiedGrid.Length);
+                _occupiedGrid.AsSpan(0, lengthToClear).Clear();
+                _maxDirtyIndex = -1;
+            }
+
             if (_occupiedGridRows > 0)
             {
-                Array.Clear(_occupiedGrid, 0, _occupiedGridRows * Columns);
+                Array.Clear(_rowOccupiedCount, 0, _occupiedGridRows);
             }
             _occupiedGridRows = 0;
         }
@@ -463,6 +491,13 @@ namespace Nova.Avalonia.UI.Controls
             {
                 int newSize = Math.Max(required, _occupiedGrid.Length * 2);
                 Array.Resize(ref _occupiedGrid, newSize);
+                // Also resize row counts
+                Array.Resize(ref _rowOccupiedCount, newSize / columns + 1);
+            }
+            // Ensure row count array is large enough even if grid was large enough
+            if (_rowOccupiedCount.Length < rows)
+            {
+                 Array.Resize(ref _rowOccupiedCount, Math.Max(rows, _rowOccupiedCount.Length * 2));
             }
 
             // Clear new rows only
@@ -470,7 +505,10 @@ namespace Nova.Avalonia.UI.Controls
             int endIdx = rows * columns;
             if (endIdx > startIdx)
             {
-                Array.Clear(_occupiedGrid, startIdx, endIdx - startIdx);
+                _occupiedGrid.AsSpan(startIdx, endIdx - startIdx).Clear();
+                int rowsToClear = rows - _occupiedGridRows;
+                if (rowsToClear > 0)
+                    Array.Clear(_rowOccupiedCount, _occupiedGridRows, rowsToClear);
             }
             _occupiedGridRows = rows;
         }

@@ -82,6 +82,7 @@ namespace Nova.Avalonia.UI.Controls
         private Rect _viewport;
         private double _lastEstimatedItemHeight = 100;
         private double _lastMeasureWidth = -1;
+        private double _lastMaxHeight = -1;
         private bool _isInLayout;
 
         // Reusable collections to avoid allocations in hot path
@@ -171,7 +172,14 @@ namespace Nova.Avalonia.UI.Controls
         {
             base.OnItemsChanged(items, e);
 
-            if (e.Action == NotifyCollectionChangedAction.Reset)
+            bool isAppend = e.Action == NotifyCollectionChangedAction.Add && 
+                            e.NewStartingIndex >= _itemBoundsCacheCount;
+
+            if (e.Action == NotifyCollectionChangedAction.Reset ||
+                e.Action == NotifyCollectionChangedAction.Remove ||
+                e.Action == NotifyCollectionChangedAction.Replace ||
+                e.Action == NotifyCollectionChangedAction.Move ||
+                (e.Action == NotifyCollectionChangedAction.Add && !isAppend))
             {
                 RecycleAllContainers();
                 ClearBoundsCache();
@@ -232,11 +240,14 @@ namespace Nova.Avalonia.UI.Controls
                 double viewportTop = Math.Max(0, viewportY - bufferSize);
                 double viewportBottom = viewportY + viewportHeight + bufferSize;
 
-                // Reset column heights
-                Array.Clear(_columnNextY, 0, columnCount);
+                // Reset column heights using Span for efficient array access
+                _columnNextY.AsSpan(0, columnCount).Clear();
 
                 // Track which containers are still needed (reuse collection)
                 _neededIndices.Clear();
+
+                // Cache measure constraint outside loop to avoid allocations
+                var measureConstraint = new Size(actualColumnWidth, double.PositiveInfinity);
 
                 double maxHeight = 0;
                 int totalMeasured = 0;
@@ -265,7 +276,7 @@ namespace Nova.Avalonia.UI.Controls
 
                         if (container != null)
                         {
-                            container.Measure(new Size(actualColumnWidth, double.PositiveInfinity));
+                            container.Measure(measureConstraint);
                             itemHeight = container.DesiredSize.Height;
 
                             // Update average
@@ -301,6 +312,7 @@ namespace Nova.Avalonia.UI.Controls
 
                 _itemBoundsCacheCount = itemCount;
                 _lastMeasureWidth = totalWidth;
+                _lastMaxHeight = maxHeight;
 
                 return new Size(totalWidth, maxHeight);
             }
@@ -604,14 +616,15 @@ namespace Nova.Avalonia.UI.Controls
 
         private int GetShortestColumn(int columnCount)
         {
+            var columns = _columnNextY.AsSpan(0, columnCount);
             int shortestIndex = 0;
-            double minHeight = _columnNextY[0];
+            double minHeight = columns[0];
 
             for (int i = 1; i < columnCount; i++)
             {
-                if (_columnNextY[i] < minHeight)
+                if (columns[i] < minHeight)
                 {
-                    minHeight = _columnNextY[i];
+                    minHeight = columns[i];
                     shortestIndex = i;
                 }
             }

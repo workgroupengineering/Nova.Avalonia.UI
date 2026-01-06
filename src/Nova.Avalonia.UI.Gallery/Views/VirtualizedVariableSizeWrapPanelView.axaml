@@ -39,7 +39,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Virtualized Panel Demo -->
+            <!-- Virtualized Panel -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
                 <StackPanel Spacing="10">
                     <TextBlock Text="Large Dataset" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentBrush}"/>
