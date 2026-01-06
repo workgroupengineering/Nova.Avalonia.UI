@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Media;
+using Nova.Avalonia.UI.Controls;
 
 namespace Nova.Avalonia.UI.Gallery.ViewModels;
 
@@ -18,6 +19,15 @@ public partial class CircularPanelViewModel : PageViewModel
 
     [ObservableProperty]
     private bool _isClockwise = true;
+
+    // Orientation derived from IsClockwise
+    [ObservableProperty]
+    private CircularOrientation _orientation = CircularOrientation.Clockwise;
+
+    partial void OnIsClockwiseChanged(bool value)
+    {
+        Orientation = value ? CircularOrientation.Clockwise : CircularOrientation.CounterClockwise;
+    }
 
     public ObservableCollection<CircularItem> Items { get; } = new();
 

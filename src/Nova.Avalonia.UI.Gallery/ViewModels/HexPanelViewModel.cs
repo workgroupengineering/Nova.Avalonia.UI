@@ -32,10 +32,7 @@ public partial class HexPanelViewModel : PageViewModel
         ReflowItems();
     }
 
-    partial void OnColumnCountChanged(int value)
-    {
-        ReflowItems();
-    }
+
 
     [RelayCommand]
     private void AddItem()
@@ -57,11 +54,12 @@ public partial class HexPanelViewModel : PageViewModel
 
     private void ReflowItems()
     {
+        const int dynamicColumnCount = 4;
         for (int i = 0; i < Items.Count; i++)
         {
             var item = Items[i];
-            item.Row = i / ColumnCount;
-            item.Column = i % ColumnCount;
+            item.Row = i / dynamicColumnCount;
+            item.Column = i % dynamicColumnCount;
         }
     }
 }

@@ -58,23 +58,17 @@
                     </StackPanel>
 
                     <!-- Preview -->
-                    <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" CornerRadius="4" Padding="10" Height="350" ClipToBounds="True">
-                        <ItemsControl ItemsSource="{Binding Items}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls:CircularPanel Radius="{Binding $parent[ItemsControl].DataContext.Radius}"
-                                                            StartAngle="{Binding $parent[ItemsControl].DataContext.StartAngle}"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Width="50" Height="50" Background="{Binding Brush}" CornerRadius="25">
-                                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                                   Foreground="White" FontWeight="Bold" FontSize="10"/>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                    <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" CornerRadius="4" Padding="10" Height="280" ClipToBounds="True">
+                        <controls:CircularPanel Radius="{Binding Radius}" StartAngle="{Binding StartAngle}" Orientation="{Binding Orientation}">
+                            <Border Width="50" Height="50" Background="#FF6B6B" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#4ECDC4" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#45B7D1" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#FFA07A" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#98D8C8" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#F7DC6F" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#BB8FCE" CornerRadius="25"/>
+                            <Border Width="50" Height="50" Background="#85C1E9" CornerRadius="25"/>
+                        </controls:CircularPanel>
                     </Border>
                 </StackPanel>
             </Border>

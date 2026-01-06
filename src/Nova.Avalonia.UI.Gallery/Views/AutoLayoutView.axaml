@@ -69,7 +69,7 @@
                             CornerRadius="8" Height="400" Padding="0" ClipToBounds="True">
                         
                         <!-- The AutoLayout Panel -->
-                        <controls:AutoLayout Background="White"
+                        <controls:AutoLayout Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                                              Orientation="{Binding Orientation}"
                                              Spacing="{Binding Spacing}"
                                              Padding="20"
@@ -78,16 +78,25 @@
                                              VerticalContentAlignment="{Binding VerticalContent}"
                                              IsReverseZIndex="{Binding IsReverseZIndex}">
                             
-                            <Border Background="#FF5722" CornerRadius="4" Padding="10">
-                                <TextBlock Text="Item 1" Foreground="White"/>
+                            <!-- Items with MinWidth/MinHeight allow alignment to show effect -->
+                            <Border Background="#FF5722" CornerRadius="8" MinWidth="60" MinHeight="60" Padding="15">
+                                <TextBlock Text="1" Foreground="White" FontSize="20" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
 
-                            <Border Background="#2196F3" CornerRadius="4" Padding="10">
-                                <TextBlock Text="Item 2" Foreground="White"/>
+                            <Border Background="#2196F3" CornerRadius="8" MinWidth="60" MinHeight="60" Padding="15">
+                                <TextBlock Text="2" Foreground="White" FontSize="20" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             
-                            <Border Background="#4CAF50" CornerRadius="4" Padding="10">
-                                <TextBlock Text="Item 3 (Longer)" Foreground="White"/>
+                            <Border Background="#4CAF50" CornerRadius="8" MinWidth="60" MinHeight="60" Padding="15">
+                                <TextBlock Text="3" Foreground="White" FontSize="20" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <Border Background="#9C27B0" CornerRadius="8" MinWidth="60" MinHeight="60" Padding="15">
+                                <TextBlock Text="4" Foreground="White" FontSize="20" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             
                         </controls:AutoLayout>

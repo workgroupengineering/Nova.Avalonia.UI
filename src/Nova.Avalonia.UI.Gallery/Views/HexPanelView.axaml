@@ -108,8 +108,7 @@
                         <ItemsControl ItemsSource="{Binding Items}" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <controls:HexPanel ColumnCount="{Binding $parent[ItemsControl].DataContext.ColumnCount}"
-                                                       RowCount="{Binding $parent[ItemsControl].DataContext.RowCount}"/>
+                                    <controls:HexPanel ColumnCount="4" RowCount="5"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Styles>
