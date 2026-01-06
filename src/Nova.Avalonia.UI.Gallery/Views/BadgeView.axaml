@@ -8,7 +8,7 @@
     <ScrollViewer>
         <StackPanel Spacing="20" Margin="20">
 
-            <TextBlock Text="A notification badge for displaying counts or status indicators." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6"/>
+            <TextBlock Text="A notification badge for displaying counts or status indicators." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
 
             <!-- Basic Badges (Standalone) -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">

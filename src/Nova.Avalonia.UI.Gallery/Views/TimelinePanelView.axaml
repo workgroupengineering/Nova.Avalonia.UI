@@ -10,7 +10,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Spacing="20" Margin="20">
-            <TextBlock Text="A layout panel for timeline-style step/process flows." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6"/>
+            <TextBlock Text="A layout panel for timeline-style step/process flows." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
 
             <!-- Basic Vertical Timeline -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">

@@ -10,7 +10,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Spacing="20" Margin="20">
-            <TextBlock Text="Arranges items in a radial pattern radiating from the center." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6"/>
+            <TextBlock Text="Arranges items in a radial pattern radiating from the center." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
 
             <!-- Basic Usage -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">

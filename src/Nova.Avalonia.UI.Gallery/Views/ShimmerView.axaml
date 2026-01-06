@@ -12,7 +12,8 @@
 
             <TextBlock Text="The shimmer automatically detects TextBlocks, Borders, Ellipses, etc. and creates matching skeleton shapes!" 
                        Theme="{StaticResource BodyTextBlockStyle}" 
-                       Opacity="0.6"/>
+                       Opacity="0.6"
+                       TextWrapping="Wrap"/>
 
             <CheckBox Name="GlobalToggle"
                       Content="Show Shimmer (IsLoading)"

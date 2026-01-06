@@ -10,7 +10,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Spacing="20" Margin="20">
-            <TextBlock Text="A layout panel that arranges items along an arc (partial circle)." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6"/>
+            <TextBlock Text="A layout panel that arranges items along an arc (partial circle)." Theme="{StaticResource BodyTextBlockStyle}" Opacity="0.6" TextWrapping="Wrap"/>
 
             <!-- Basic Usage -->
             <Border BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="2" Padding="15" CornerRadius="8">
