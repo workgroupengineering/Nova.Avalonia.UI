@@ -146,6 +146,10 @@ public class RadialPanel : Panel
                 child.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
                 child.RenderTransform = new global::Avalonia.Media.RotateTransform(angle + 90 + ItemAngle);
             }
+            else
+            {
+                child.RenderTransform = null;
+            }
 
             child.Arrange(new Rect(x - childWidth / 2, y - childHeight / 2, childWidth, childHeight));
         }

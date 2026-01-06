@@ -73,25 +73,37 @@
 
                     <!-- Preview -->
                     <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" CornerRadius="4" Padding="10" Height="450" ClipToBounds="True">
-                        <ItemsControl ItemsSource="{Binding Items}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls:RadialPanel Radius="{Binding $parent[ItemsControl].DataContext.Radius}"
-                                                          StartAngle="{Binding $parent[ItemsControl].DataContext.StartAngle}"
-                                                          SweepAngle="{Binding $parent[ItemsControl].DataContext.SweepAngle}"
-                                                          ItemAngle="{Binding $parent[ItemsControl].DataContext.ItemAngle}"
-                                                          RotateItems="{Binding $parent[ItemsControl].DataContext.RotateItems}"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Width="100" Height="40" Background="{Binding Brush}" CornerRadius="20" BorderBrush="White" BorderThickness="2">
-                                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                                   Foreground="White" FontWeight="Bold"/>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <controls:RadialPanel Radius="{Binding Radius}"
+                                              StartAngle="{Binding StartAngle}"
+                                              SweepAngle="{Binding SweepAngle}"
+                                              ItemAngle="{Binding ItemAngle}"
+                                              RotateItems="{Binding RotateItems}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Border Width="100" Height="40" Background="#FF6B6B" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 1" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#4ECDC4" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 2" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#45B7D1" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 3" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#FFA07A" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 4" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#98D8C8" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#F7DC6F" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 6" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#BB8FCE" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 7" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                            <Border Width="100" Height="40" Background="#85C1E9" CornerRadius="20" BorderBrush="White" BorderThickness="2">
+                                <TextBlock Text="Item 8" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"/>
+                            </Border>
+                        </controls:RadialPanel>
                     </Border>
                 </StackPanel>
             </Border>
