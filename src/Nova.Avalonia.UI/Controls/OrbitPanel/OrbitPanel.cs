@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -108,7 +109,7 @@ public class OrbitPanel : Panel
             maxChildSize = Math.Max(maxChildSize, Math.Max(child.DesiredSize.Width, child.DesiredSize.Height));
         }
 
-        // Calculate total size needed
+
         double maxRadius = InnerRadius + maxOrbit * OrbitSpacing + maxChildSize / 2;
         double diameter = maxRadius * 2;
 
@@ -120,20 +121,30 @@ public class OrbitPanel : Panel
         var centerX = finalSize.Width / 2;
         var centerY = finalSize.Height / 2;
 
-        // Group children by orbit
-        var orbitGroups = Children
-            .Where(c => c.IsVisible)
-            .GroupBy(c => GetOrbit(c))
-            .OrderBy(g => g.Key);
-
-        foreach (var group in orbitGroups)
+        var orbitMap = new Dictionary<int, List<Control>>();
+        foreach (var child in Children)
         {
-            int orbitIndex = group.Key;
-            var childrenInOrbit = group.ToList();
+            if (!child.IsVisible) continue;
+            
+            int orbit = GetOrbit(child);
+            if (!orbitMap.TryGetValue(orbit, out var list))
+            {
+                list = new List<Control>();
+                orbitMap[orbit] = list;
+            }
+            list.Add(child);
+        }
+
+        var sortedOrbits = orbitMap.Keys.ToList();
+        sortedOrbits.Sort();
+
+        foreach (var orbitIndex in sortedOrbits)
+        {
+            var childrenInOrbit = orbitMap[orbitIndex];
 
             if (orbitIndex == 0)
             {
-                // Center orbit - all items at center
+
                 foreach (var child in childrenInOrbit)
                 {
                     var x = centerX - child.DesiredSize.Width / 2;
@@ -143,7 +154,7 @@ public class OrbitPanel : Panel
             }
             else
             {
-                // Outer orbits - distribute evenly
+
                 double radius = InnerRadius + (orbitIndex - 1) * OrbitSpacing;
                 double angleStep = childrenInOrbit.Count > 0 ? 360.0 / childrenInOrbit.Count : 0;
                 double currentAngle = StartAngle;

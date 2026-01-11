@@ -171,7 +171,6 @@ public class AutoLayout : Panel
         double maxSecondary = 0;
         int visibleCount = 0;
 
-        // Subtract padding from available size
         double availableWidthRaw = parentWidth - padding.Left - padding.Right;
         double availableHeightRaw = parentHeight - padding.Top - padding.Bottom;
         
@@ -224,9 +223,7 @@ public class AutoLayout : Panel
                 }
                 else
                 {
-                    // SpaceBetween: Minimal width is just the items.
-                    // Spacing grows to fill, but desired size shouldn't force growth unless constrained?
-                    // Typically 'SpaceBetween' expands to fill Parent. If parent is Auto, it shrinks to items.
+                    // SpaceBetween: Items grow to fill available space.
                     totalWidth = accumulatedSize; 
                 }
                 totalHeight = maxSecondary;
@@ -266,13 +263,11 @@ public class AutoLayout : Panel
         double contentWidth = finalSize.Width - padding.Left - padding.Right;
         double contentHeight = finalSize.Height - padding.Top - padding.Bottom;
 
-        // Filter visible layout items
         var layoutChildren = children.Where(c => c.IsVisible && !GetIsAbsolute(c)).ToList();
         int count = layoutChildren.Count;
         
         if (count == 0) return finalSize;
 
-        // Calculate actual spacing for SpaceBetween
         double actualSpacing = spacing;
         double totalItemSize = 0;
 
@@ -317,16 +312,7 @@ public class AutoLayout : Panel
             }
         }
 
-        // ZIndex order
-        var orderedChildren = isReverse ? layoutChildren.AsEnumerable().Reverse() : layoutChildren;
-        // Note: Arrange loop must follow position logic. But if we reverse LIST, we reverse POSITIONS?
-        // No, IsReverseZIndex usually means visually on top, but layout order remains.
-        // Avalonia renders in order of Children collection.
-        // To achieve "Reverse ZIndex", we might need to modify ZIndex property or just draw order.
-        // Panel.ZIndex property can be set. 
-        // For simplicity, let's just let Avalonia draw. If user wants reverse Z, standard Panel ZIndex works.
-        // "IsReverseZIndex" implies 'First item is on top of Second'. Default is 'Second on top of First'.
-        // To fix this without sorting Children collection, we set ZIndex.
+        var orderedChildren = layoutChildren;
         
         if (isReverse)
         {
@@ -337,15 +323,12 @@ public class AutoLayout : Panel
         }
         else
         {
-             for (int i = 0; i < children.Count; i++)
+            for (int i = 0; i < children.Count; i++)
             {
                 children[i].ZIndex = 0; // Reset
             }
         }
 
-
-        // Arrange items
-        // We iterate effectively in logical order to place them.
         foreach (var child in layoutChildren)
         {
             var desired = child.DesiredSize;
@@ -356,21 +339,10 @@ public class AutoLayout : Panel
             // If child is Stretch, force it to fill secondary dimension
             if (orientation == Orientation.Horizontal)
             {
-                // Child vertical alignment overrides parent VerticalContentAlignment?
-                // Standard behavior: Child.VerticalAlignment takes precedence if set?
-                // Actually, if we want "Fill Container" (Stretch), we need to arrange with full height.
-                
                 double arrangeY = currentY;
                 double arrangeH = childH;
-                
-                // If Parent VerticalAlign is Stretch -> Force all children to stretch?
-                // Or does Parent VerticalAlign just effectively align the row? 
-                // Spec said "VerticalContentAlignment: Map to Figma Alignment Matrix Y".
-                // In Figma, you set alignment for the whole row. Child "Fill Container" is an exception.
-                
-                // If VerticalContentAlignment is Stretch, we stretch the child.
-                // UNLESS child has specific alignment?
-                
+
+                // Align child based on VerticalContentAlignment or child's own VerticalAlignment.
                 var childVAlign = child.VerticalAlignment;
                 
                 if (VerticalContentAlignment == VerticalAlignment.Stretch || childVAlign == VerticalAlignment.Stretch)
@@ -418,7 +390,6 @@ public class AutoLayout : Panel
             }
         }
         
-        // Arrange Absolute Items (always 0,0 or respect their alignment in the box?)
         foreach (var child in children.Where(c => GetIsAbsolute(c) && c.IsVisible))
         {
              // Simple absolute: Give it the whole rect

@@ -10,38 +10,37 @@ using System.Threading.Tasks;
 namespace Nova.Avalonia.UI.Controls;
 
 /// <summary>
-/// Defines the size classes (breakpoints) for responsive layouts.
-/// </summary>
-[Flags]
-public enum ResponsiveBreakpoint
-{
-    None = 0,
-    Narrow = 1,
-    Normal = 2,
-    Wide = 4,
-    All = Narrow | Normal | Wide
-}
-
-/// <summary>
 /// A panel that selectively shows its children based on the current width breakpoint.
 /// </summary>
 public class ResponsivePanel : Panel
 {
-    // Define standard Material Design breakpoints
+    /// <summary>
+    /// Defines the <see cref="NarrowBreakpoint"/> property.
+    /// </summary>
     public static readonly StyledProperty<double> NarrowBreakpointProperty =
         AvaloniaProperty.Register<ResponsivePanel, double>(nameof(NarrowBreakpoint), 600);
 
+    /// <summary>
+    /// Defines the <see cref="WideBreakpoint"/> property.
+    /// </summary>
     public static readonly StyledProperty<double> WideBreakpointProperty =
         AvaloniaProperty.Register<ResponsivePanel, double>(nameof(WideBreakpoint), 900);
 
-    // Attached Property: Condition
+    /// <summary>
+    /// Defines the <see cref="Condition"/> attached property.
+    /// </summary>
     public static readonly AttachedProperty<ResponsiveBreakpoint> ConditionProperty =
         AvaloniaProperty.RegisterAttached<ResponsivePanel, Control, ResponsiveBreakpoint>("Condition", ResponsiveBreakpoint.All);
 
-    // Transition Property
+    /// <summary>
+    /// Defines the <see cref="Transition"/> property.
+    /// </summary>
     public static readonly StyledProperty<IPageTransition?> TransitionProperty =
         AvaloniaProperty.Register<ResponsivePanel, IPageTransition?>(nameof(Transition));
 
+    /// <summary>
+    /// Gets or sets the transition to use when switching between visible children.
+    /// </summary>
     public IPageTransition? Transition
     {
         get => GetValue(TransitionProperty);
@@ -51,26 +50,39 @@ public class ResponsivePanel : Panel
     private ResponsiveBreakpoint _lastBreakpoint = ResponsiveBreakpoint.None;
     private CancellationTokenSource? _transitionCts;
 
+    /// <summary>
+    /// Gets or sets the threshold for the narrow layout class.
+    /// </summary>
     public double NarrowBreakpoint
     {
         get => GetValue(NarrowBreakpointProperty);
         set => SetValue(NarrowBreakpointProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the threshold for the wide layout class.
+    /// </summary>
     public double WideBreakpoint
     {
         get => GetValue(WideBreakpointProperty);
         set => SetValue(WideBreakpointProperty, value);
     }
 
+    /// <summary>
+    /// Gets the <see cref="ConditionProperty"/> for an element.
+    /// </summary>
     public static ResponsiveBreakpoint GetCondition(Control element) => element.GetValue(ConditionProperty);
+
+    /// <summary>
+    /// Sets the <see cref="ConditionProperty"/> for an element.
+    /// </summary>
     public static void SetCondition(Control element, ResponsiveBreakpoint value) => element.SetValue(ConditionProperty, value);
 
+    /// <inheritdoc />
     protected override Size MeasureOverride(Size availableSize)
     {
         var currentBreakpoint = GetCurrentBreakpoint(availableSize.Width);
         
-        // If breakpoint changed, handle transition
         // If breakpoint changed, handle transition
         if (currentBreakpoint != _lastBreakpoint)
         {
@@ -131,18 +143,7 @@ public class ResponsivePanel : Panel
 
             try
             {
-                // We simplify by treating the first matching items as the "Page" for the transition
-                // Ideally we'd wrap them, but for now we animate them individually or just the first primary one.
-                // Standard PageTransition expects Single From/To.
-                // If we have multiple children for a condition, this is tricky. 
-                // We will iterate and trigger generic fade for all? 
-                // Or just assume standard usage of 1 child per view.
-                
-                var tasks = new List<Task>();
-                
-                // For simplicity in this v1, if there are multiple, we create a composite task?
-                // Actually IPageTransition only accepts one From and one To.
-                
+                // Start transition between outgoing and incoming views
                 Control? from = outgoing.FirstOrDefault();
                 Control? to = incoming.FirstOrDefault();
                 
@@ -172,6 +173,7 @@ public class ResponsivePanel : Panel
         }
     }
 
+    /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
         var currentBreakpoint = GetCurrentBreakpoint(finalSize.Width);

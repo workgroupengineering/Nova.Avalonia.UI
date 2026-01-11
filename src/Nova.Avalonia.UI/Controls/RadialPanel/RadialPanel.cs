@@ -93,26 +93,34 @@ public class RadialPanel : Panel
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var visibleChildren = Children.Where(c => c.IsVisible).ToList();
-        if (visibleChildren.Count == 0)
-            return new Size(0, 0);
-
         double maxChildSize = 0;
-        foreach (var child in visibleChildren)
+        int visibleCount = 0;
+        
+        foreach (var child in Children)
         {
+            if (!child.IsVisible) continue;
+            
             child.Measure(Size.Infinity);
             maxChildSize = Math.Max(maxChildSize, Math.Max(child.DesiredSize.Width, child.DesiredSize.Height));
+            visibleCount++;
         }
 
-        // Size is diameter plus largest child
+        if (visibleCount == 0)
+            return new Size(0, 0);
+
         double diameter = Radius * 2 + maxChildSize;
         return new Size(diameter, diameter);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var visibleChildren = Children.Where(c => c.IsVisible).ToList();
-        if (visibleChildren.Count == 0)
+        int visibleCount = 0;
+        foreach (var child in Children)
+        {
+            if (child.IsVisible) visibleCount++;
+        }
+
+        if (visibleCount == 0)
             return finalSize;
 
         double centerX = finalSize.Width / 2;
@@ -120,27 +128,25 @@ public class RadialPanel : Panel
         double radius = Radius;
         double startAngle = StartAngle;
         double sweepAngle = SweepAngle;
-
-        // Calculate angle step
-        double angleStep = visibleChildren.Count > 1 
-            ? sweepAngle / (sweepAngle >= 360 ? visibleChildren.Count : visibleChildren.Count - 1)
+        
+        double angleStep = visibleCount > 1 
+            ? sweepAngle / (sweepAngle >= 360 ? visibleCount : visibleCount - 1)
             : 0;
 
-        for (int i = 0; i < visibleChildren.Count; i++)
+        int index = 0;
+        foreach (var child in Children)
         {
-            var child = visibleChildren[i];
-            double angle = startAngle + (i * angleStep);
+            if (!child.IsVisible) continue;
+            
+            double angle = startAngle + (index * angleStep);
             double radians = angle * Math.PI / 180;
-
-            // Calculate position
+            
             double x = centerX + radius * Math.Cos(radians);
             double y = centerY + radius * Math.Sin(radians);
-
-            // Center the child on its position
+            
             double childWidth = child.DesiredSize.Width;
             double childHeight = child.DesiredSize.Height;
-
-            // Apply rotation if enabled
+            
             if (RotateItems)
             {
                 child.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
@@ -152,6 +158,7 @@ public class RadialPanel : Panel
             }
 
             child.Arrange(new Rect(x - childWidth / 2, y - childHeight / 2, childWidth, childHeight));
+            index++;
         }
 
         return finalSize;

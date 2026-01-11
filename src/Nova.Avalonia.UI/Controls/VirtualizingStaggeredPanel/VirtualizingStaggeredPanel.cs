@@ -11,8 +11,8 @@ using Avalonia.VisualTree;
 namespace Nova.Avalonia.UI.Controls
 {
     /// <summary>
-    /// A virtualizing panel that arranges children in a variable-size grid layout.
-    /// Items can span multiple columns and rows, creating flexible tile-based layouts.
+    /// A virtualizing panel that arranges children in a staggered grid (masonry) layout.
+    /// Items are placed in the shortest column, creating an efficient Pinterest-style layout.
     /// Only items within the visible viewport (plus buffer) are materialized for optimal performance.
     /// </summary>
     /// <remarks>
@@ -22,8 +22,8 @@ namespace Nova.Avalonia.UI.Controls
     /// and improving scroll performance for large datasets.
     /// </para>
     /// <para>
-    /// Use the <see cref="ColumnSpanProperty"/> and <see cref="RowSpanProperty"/> attached
-    /// properties on child elements to control their size in the grid.
+    /// The panel automatically calculates the number of columns based on the available
+    /// width and the <see cref="DesiredColumnWidth"/> property.
     /// </para>
     /// </remarks>
     /// <example>
@@ -31,57 +31,45 @@ namespace Nova.Avalonia.UI.Controls
     /// &lt;ItemsControl ItemsSource="{Binding Items}"&gt;
     ///     &lt;ItemsControl.ItemsPanel&gt;
     ///         &lt;ItemsPanelTemplate&gt;
-    ///             &lt;controls:VirtualizingVariableSizeWrapPanel Columns="4" TileSize="100" Spacing="8"/&gt;
+    ///             &lt;controls:VirtualizingStaggeredPanel DesiredColumnWidth="200" ColumnSpacing="8" RowSpacing="8"/&gt;
     ///         &lt;/ItemsPanelTemplate&gt;
     ///     &lt;/ItemsControl.ItemsPanel&gt;
     /// &lt;/ItemsControl&gt;
     /// </code>
     /// </example>
-    public class VirtualizingVariableSizeWrapPanel : VirtualizingPanel
+    public class VirtualizingStaggeredPanel : VirtualizingPanel
     {
         private static readonly AttachedProperty<object?> RecycleKeyProperty =
-            AvaloniaProperty.RegisterAttached<VirtualizingVariableSizeWrapPanel, Control, object?>("RecycleKey");
+            AvaloniaProperty.RegisterAttached<VirtualizingStaggeredPanel, Control, object?>("RecycleKey");
 
         private static readonly object s_itemIsItsOwnContainer = new();
 
         /// <summary>
-        /// Defines the <see cref="TileSize"/> property.
+        /// Defines the <see cref="DesiredColumnWidth"/> property.
         /// </summary>
-        public static readonly StyledProperty<double> TileSizeProperty =
-            AvaloniaProperty.Register<VirtualizingVariableSizeWrapPanel, double>(nameof(TileSize), 100);
+        public static readonly StyledProperty<double> DesiredColumnWidthProperty =
+            AvaloniaProperty.Register<VirtualizingStaggeredPanel, double>(nameof(DesiredColumnWidth), 250);
 
         /// <summary>
-        /// Defines the <see cref="Spacing"/> property.
+        /// Defines the <see cref="ColumnSpacing"/> property.
         /// </summary>
-        public static readonly StyledProperty<double> SpacingProperty =
-            AvaloniaProperty.Register<VirtualizingVariableSizeWrapPanel, double>(nameof(Spacing), 8);
+        public static readonly StyledProperty<double> ColumnSpacingProperty =
+            AvaloniaProperty.Register<VirtualizingStaggeredPanel, double>(nameof(ColumnSpacing), 0);
 
         /// <summary>
-        /// Defines the <see cref="Columns"/> property.
+        /// Defines the <see cref="RowSpacing"/> property.
         /// </summary>
-        public static readonly StyledProperty<int> ColumnsProperty =
-            AvaloniaProperty.Register<VirtualizingVariableSizeWrapPanel, int>(nameof(Columns), 4);
-
-        /// <summary>
-        /// Defines the ColumnSpan attached property.
-        /// </summary>
-        public static readonly AttachedProperty<int> ColumnSpanProperty =
-            AvaloniaProperty.RegisterAttached<VirtualizingVariableSizeWrapPanel, Control, int>("ColumnSpan", 1);
-
-        /// <summary>
-        /// Defines the RowSpan attached property.
-        /// </summary>
-        public static readonly AttachedProperty<int> RowSpanProperty =
-            AvaloniaProperty.RegisterAttached<VirtualizingVariableSizeWrapPanel, Control, int>("RowSpan", 1);
+        public static readonly StyledProperty<double> RowSpacingProperty =
+            AvaloniaProperty.Register<VirtualizingStaggeredPanel, double>(nameof(RowSpacing), 0);
 
         // Pre-allocated delegate to avoid closure allocations
         private readonly Action<Control, int> _recycleElement;
 
-        // Container tracking, Dictionary supports sparse visibility patterns
+        // Container tracking, Dictionary supports sparse visibility patterns in staggered layouts
         private readonly Dictionary<int, Control> _indexToContainer = new();
         private readonly Dictionary<Control, int> _containerToIndex = new();
 
-        // Recycle pool, hidden containers ready for reuse
+        // Recycle pool, hidden containers ready for reuse (avoids Remove/Add visual tree operations)
         private Dictionary<object, Stack<Control>>? _recyclePool;
 
         // Scroll anchor support
@@ -89,20 +77,12 @@ namespace Nova.Avalonia.UI.Controls
 
         // Layout state, reused across measure passes
         private Rect[] _itemBoundsCache = Array.Empty<Rect>();
-        private int[] _cachedColSpans = Array.Empty<int>();
-        private int[] _cachedRowSpans = Array.Empty<int>();
-        private int _itemCacheCount;
-
-        // Occupied grid, reusable array for position finding
-        private bool[] _occupiedGrid = Array.Empty<bool>();
-        private int[] _rowOccupiedCount = Array.Empty<int>();
-        private int _occupiedGridRows;
-        private int _firstFreeRow;
-        private int _maxDirtyIndex = -1;
-
+        private int _itemBoundsCacheCount;
+        private double[] _columnNextY = Array.Empty<double>();
         private Rect _viewport;
+        private double _lastEstimatedItemHeight = 100;
         private double _lastMeasureWidth = -1;
-        private double _lastMaxHeight;
+        private double _lastMaxHeight = -1;
         private bool _isInLayout;
 
         // Reusable collections to avoid allocations in hot path
@@ -111,71 +91,43 @@ namespace Nova.Avalonia.UI.Controls
         private const int MaxPoolSize = 20;
 
         /// <summary>
-        /// Gets or sets the size of a single tile (both width and height for a 1x1 item).
+        /// Gets or sets the desired width of each column.
+        /// The actual column width may vary slightly to fill the available space evenly.
         /// </summary>
-        /// <value>The tile size in device-independent pixels. Default is 100.</value>
-        public double TileSize
+        /// <value>The desired column width in device-independent pixels. Default is 250.</value>
+        public double DesiredColumnWidth
         {
-            get => GetValue(TileSizeProperty);
-            set => SetValue(TileSizeProperty, value);
+            get => GetValue(DesiredColumnWidthProperty);
+            set => SetValue(DesiredColumnWidthProperty, value);
         }
 
         /// <summary>
-        /// Gets or sets the spacing between tiles in both directions.
+        /// Gets or sets the horizontal spacing between columns.
         /// </summary>
-        /// <value>The spacing in device-independent pixels. Default is 8.</value>
-        public double Spacing
+        /// <value>The horizontal spacing in device-independent pixels. Default is 0.</value>
+        public double ColumnSpacing
         {
-            get => GetValue(SpacingProperty);
-            set => SetValue(SpacingProperty, value);
+            get => GetValue(ColumnSpacingProperty);
+            set => SetValue(ColumnSpacingProperty, value);
         }
 
         /// <summary>
-        /// Gets or sets the number of columns in the grid.
+        /// Gets or sets the vertical spacing between items in the same column.
         /// </summary>
-        /// <value>The number of columns. Default is 4.</value>
-        public int Columns
+        /// <value>The vertical spacing in device-independent pixels. Default is 0.</value>
+        public double RowSpacing
         {
-            get => GetValue(ColumnsProperty);
-            set => SetValue(ColumnsProperty, value);
+            get => GetValue(RowSpacingProperty);
+            set => SetValue(RowSpacingProperty, value);
         }
 
-        /// <summary>
-        /// Gets the number of columns an element should span.
-        /// </summary>
-        /// <param name="element">The element to get the column span for.</param>
-        /// <returns>The number of columns the element spans.</returns>
-        public static int GetColumnSpan(Control element) => element.GetValue(ColumnSpanProperty);
-
-        /// <summary>
-        /// Sets the number of columns an element should span.
-        /// </summary>
-        /// <param name="element">The element to set the column span for.</param>
-        /// <param name="value">The number of columns to span.</param>
-        public static void SetColumnSpan(Control element, int value) => element.SetValue(ColumnSpanProperty, value);
-
-        /// <summary>
-        /// Gets the number of rows an element should span.
-        /// </summary>
-        /// <param name="element">The element to get the row span for.</param>
-        /// <returns>The number of rows the element spans.</returns>
-        public static int GetRowSpan(Control element) => element.GetValue(RowSpanProperty);
-
-        /// <summary>
-        /// Sets the number of rows an element should span.
-        /// </summary>
-        /// <param name="element">The element to set the row span for.</param>
-        /// <param name="value">The number of rows to span.</param>
-        public static void SetRowSpan(Control element, int value) => element.SetValue(RowSpanProperty, value);
-
-        static VirtualizingVariableSizeWrapPanel()
+        static VirtualizingStaggeredPanel()
         {
-            AffectsMeasure<VirtualizingVariableSizeWrapPanel>(TileSizeProperty, SpacingProperty, ColumnsProperty);
-            AffectsArrange<VirtualizingVariableSizeWrapPanel>(TileSizeProperty, SpacingProperty);
-            AffectsMeasure<VirtualizingVariableSizeWrapPanel>(ColumnSpanProperty, RowSpanProperty);
+            AffectsMeasure<VirtualizingStaggeredPanel>(DesiredColumnWidthProperty, ColumnSpacingProperty, RowSpacingProperty);
+            AffectsArrange<VirtualizingStaggeredPanel>(ColumnSpacingProperty, RowSpacingProperty);
         }
 
-        public VirtualizingVariableSizeWrapPanel()
+        public VirtualizingStaggeredPanel()
         {
             _recycleElement = RecycleElement;
             EffectiveViewportChanged += OnEffectiveViewportChanged;
@@ -208,9 +160,9 @@ namespace Nova.Avalonia.UI.Controls
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
-            if (change.Property == TileSizeProperty ||
-                change.Property == SpacingProperty ||
-                change.Property == ColumnsProperty)
+            if (change.Property == DesiredColumnWidthProperty ||
+                change.Property == ColumnSpacingProperty ||
+                change.Property == RowSpacingProperty)
             {
                 _lastMeasureWidth = -1;
             }
@@ -221,7 +173,7 @@ namespace Nova.Avalonia.UI.Controls
             base.OnItemsChanged(items, e);
 
             bool isAppend = e.Action == NotifyCollectionChangedAction.Add && 
-                            e.NewStartingIndex >= _itemCacheCount;
+                            e.NewStartingIndex >= _itemBoundsCacheCount;
 
             if (e.Action == NotifyCollectionChangedAction.Reset ||
                 e.Action == NotifyCollectionChangedAction.Remove ||
@@ -230,7 +182,7 @@ namespace Nova.Avalonia.UI.Controls
                 (e.Action == NotifyCollectionChangedAction.Add && !isAppend))
             {
                 RecycleAllContainers();
-                ClearCaches();
+                ClearBoundsCache();
             }
 
             _lastMeasureWidth = -1;
@@ -242,7 +194,7 @@ namespace Nova.Avalonia.UI.Controls
             var items = Items;
             int itemCount = items.Count;
 
-            // Non-virtualized mode
+            // Non-virtualized mode: children added directly
             if (itemCount == 0 && Children.Count > 0)
             {
                 return MeasureNonVirtualized(availableSize);
@@ -264,9 +216,18 @@ namespace Nova.Avalonia.UI.Controls
 
             try
             {
-                int columns = Columns;
-                double tileSize = TileSize;
-                double spacing = Spacing;
+                // Calculate column configuration
+                double totalWidth = double.IsInfinity(availableSize.Width)
+                    ? (_viewport.Width > 0 ? _viewport.Width : 800)
+                    : availableSize.Width;
+
+                double columnSpacing = ColumnSpacing;
+                double rowSpacing = RowSpacing;
+                int columnCount = CalculateColumnCount(totalWidth, DesiredColumnWidth, columnSpacing);
+                double actualColumnWidth = CalculateActualColumnWidth(totalWidth, columnCount, columnSpacing);
+
+                EnsureColumnArrays(columnCount);
+                EnsureBoundsCache(itemCount);
 
                 // Calculate extended viewport with generous buffer for smooth scrolling
                 // Use Bounds height or fallback for initial estimation
@@ -279,127 +240,125 @@ namespace Nova.Avalonia.UI.Controls
                 double viewportTop = Math.Max(0, viewportY - bufferSize);
                 double viewportBottom = viewportY + viewportHeight + bufferSize;
 
-                // Clear and prepare occupied grid
-                ClearOccupiedGrid();
-                _firstFreeRow = 0;
+                // Reset column heights using Span for efficient array access
+                _columnNextY.AsSpan(0, columnCount).Clear();
 
-                EnsureCaches(itemCount);
-
-                // Track which containers are needed (reuse collection)
+                // Track which containers are still needed (reuse collection)
                 _neededIndices.Clear();
-                double maxPanelHeight = 0;
+
+                // Cache measure constraint outside loop to avoid allocations
+                var measureConstraint = new Size(actualColumnWidth, double.PositiveInfinity);
+
+                double maxHeight = 0;
+                int totalMeasured = 0;
+                double totalMeasuredHeight = 0;
                 bool needsFullLayout = true;
 
                 // Optimistically reuse cached bounds if width hasn't changed
-                if (availableSize.Width == _lastMeasureWidth && _itemCacheCount == itemCount)
+                if (totalWidth == _lastMeasureWidth && _itemBoundsCacheCount == itemCount)
                 {
                     needsFullLayout = false;
-                    
                     for (int i = 0; i < itemCount; i++)
                     {
                         var rect = _itemBoundsCache[i];
-                        
-                        // Virtualization check
                         bool isVisible = rect.Bottom >= viewportTop && rect.Y <= viewportBottom;
+                        
                         if (isVisible)
                         {
                             var container = GetOrCreateContainer(items, i);
                             if (container != null)
                             {
-                                // Verify spans match cache (critical for correctness)
-                                int currentColSpan = GetColumnSpan(container);
-                                int currentRowSpan = GetRowSpan(container);
-                                if (currentColSpan < 1) currentColSpan = 1;
-                                if (currentRowSpan < 1) currentRowSpan = 1;
-
-                                if (currentColSpan != _cachedColSpans[i] || currentRowSpan != _cachedRowSpans[i])
+                                container.Measure(measureConstraint);
+                                double itemHeight = container.DesiredSize.Height;
+                                
+                                // Re-measure if height changed
+                                if (Math.Abs(itemHeight - rect.Height) > 0.1)
                                 {
-                                    // Spans changed! Cache is invalid. Fallback to full layout.
                                     needsFullLayout = true;
                                     break;
                                 }
 
                                 _neededIndices.Add(i);
-                                container.Measure(rect.Size);
                             }
                         }
                     }
 
                     if (!needsFullLayout)
                     {
-                        maxPanelHeight = _lastMaxHeight;
+                        maxHeight = _lastMaxHeight;
                     }
                 }
 
                 if (needsFullLayout)
                 {
-                    // Clear needed indices as we will repopulate them
+                    // Clear and prepare for full layout
                     _neededIndices.Clear();
+                    _columnNextY.AsSpan(0, columnCount).Clear();
 
                     for (int i = 0; i < itemCount; i++)
                     {
-                    // Get spans
-                    int colSpan = _cachedColSpans[i];
-                    int rowSpan = _cachedRowSpans[i];
+                    int columnIndex = GetShortestColumn(columnCount);
+                    double x = columnIndex * (actualColumnWidth + columnSpacing);
+                    double y = _columnNextY[columnIndex];
 
-                    if (colSpan == 0)
-                    {
-                        var container = GetOrCreateContainer(items, i);
-                        if (container != null)
-                        {
-                            colSpan = GetColumnSpan(container);
-                            rowSpan = GetRowSpan(container);
-                            if (colSpan < 1) colSpan = 1;
-                            if (rowSpan < 1) rowSpan = 1;
-                            _cachedColSpans[i] = colSpan;
-                            _cachedRowSpans[i] = rowSpan;
-                            _neededIndices.Add(i);
-                        }
-                        else
-                        {
-                            colSpan = 1;
-                            rowSpan = 1;
-                        }
-                    }
+                    // Use cached or estimated height
+                    double estimatedHeight = _itemBoundsCache[i].Height > 0
+                        ? _itemBoundsCache[i].Height
+                        : _lastEstimatedItemHeight;
 
-                    if (colSpan > columns) colSpan = columns;
+                    double bottom = y + estimatedHeight;
+                    bool isVisible = bottom >= viewportTop && y <= viewportBottom;
 
-                    // Find position
-                    FindPosition(columns, colSpan, rowSpan, out int startRow, out int startCol);
-                    MarkOccupied(columns, startRow, startCol, rowSpan, colSpan);
-
-                    // Calculate bounds
-                    double x = startCol * (tileSize + spacing);
-                    double y = startRow * (tileSize + spacing);
-                    double w = colSpan * tileSize + (colSpan - 1) * spacing;
-                    double h = rowSpan * tileSize + (rowSpan - 1) * spacing;
-
-                    var rect = new Rect(x, y, w, h);
-                    _itemBoundsCache[i] = rect;
-
-                    if (rect.Bottom > maxPanelHeight)
-                        maxPanelHeight = rect.Bottom;
-
-                    // Virtualization
-                    bool isVisible = rect.Bottom >= viewportTop && rect.Y <= viewportBottom;
+                    double itemHeight;
 
                     if (isVisible)
                     {
                         _neededIndices.Add(i);
                         var container = GetOrCreateContainer(items, i);
-                        container?.Measure(new Size(w, h));
+
+                        if (container != null)
+                        {
+                            container.Measure(measureConstraint);
+                            itemHeight = container.DesiredSize.Height;
+
+                            // Update average
+                            totalMeasured++;
+                            totalMeasuredHeight += itemHeight;
+                        }
+                        else
+                        {
+                            itemHeight = estimatedHeight;
+                        }
                     }
-                }
+                    else
+                    {
+                        itemHeight = estimatedHeight;
+                    }
+
+                    _itemBoundsCache[i] = new Rect(x, y, actualColumnWidth, itemHeight);
+                    _columnNextY[columnIndex] = y + itemHeight + rowSpacing;
+
+                    double columnHeight = _columnNextY[columnIndex] - rowSpacing;
+                    if (columnHeight > maxHeight)
+                        maxHeight = columnHeight;
                 }
 
-                // Recycle unneeded containers
+                }
+
+                // Recycle containers that are no longer visible
                 RecycleUnneededContainers();
 
-                _itemCacheCount = itemCount;
-                _lastMaxHeight = maxPanelHeight;
-                _lastMeasureWidth = availableSize.Width;
+                // Update estimated height
+                if (totalMeasured > 0)
+                {
+                    _lastEstimatedItemHeight = totalMeasuredHeight / totalMeasured;
+                }
 
-                return new Size(availableSize.Width, maxPanelHeight);
+                _itemBoundsCacheCount = itemCount;
+                _lastMeasureWidth = totalWidth;
+                _lastMaxHeight = maxHeight;
+
+                return new Size(totalWidth, maxHeight);
             }
             finally
             {
@@ -409,156 +368,46 @@ namespace Nova.Avalonia.UI.Controls
 
         private Size MeasureNonVirtualized(Size availableSize)
         {
-            int columns = Columns;
-            double tileSize = TileSize;
-            double spacing = Spacing;
+            double totalWidth = double.IsInfinity(availableSize.Width) ? 800 : availableSize.Width;
+            double columnSpacing = ColumnSpacing;
+            double rowSpacing = RowSpacing;
+            int columnCount = CalculateColumnCount(totalWidth, DesiredColumnWidth, columnSpacing);
+            double actualColumnWidth = CalculateActualColumnWidth(totalWidth, columnCount, columnSpacing);
 
-            ClearOccupiedGrid();
-            EnsureCaches(Children.Count);
-            _itemCacheCount = 0;
+            EnsureColumnArrays(columnCount);
+            Array.Clear(_columnNextY, 0, columnCount);
 
-            double maxPanelHeight = 0;
+            EnsureBoundsCache(Children.Count);
+            _itemBoundsCacheCount = 0;
+
             int index = 0;
-
             foreach (var child in Children)
             {
                 if (child is not Control control) continue;
 
-                int colSpan = GetColumnSpan(control);
-                int rowSpan = GetRowSpan(control);
-                if (colSpan < 1) colSpan = 1;
-                if (rowSpan < 1) rowSpan = 1;
-                if (colSpan > columns) colSpan = columns;
+                int columnIndex = GetShortestColumn(columnCount);
+                double x = columnIndex * (actualColumnWidth + columnSpacing);
+                double y = _columnNextY[columnIndex];
 
-                FindPosition(columns, colSpan, rowSpan, out int startRow, out int startCol);
-                MarkOccupied(columns, startRow, startCol, rowSpan, colSpan);
+                control.Measure(new Size(actualColumnWidth, double.PositiveInfinity));
+                double itemHeight = control.DesiredSize.Height;
 
-                double x = startCol * (tileSize + spacing);
-                double y = startRow * (tileSize + spacing);
-                double w = colSpan * tileSize + (colSpan - 1) * spacing;
-                double h = rowSpan * tileSize + (rowSpan - 1) * spacing;
-
-                child.Measure(new Size(w, h));
-
-                var rect = new Rect(x, y, w, h);
-                _itemBoundsCache[index] = rect;
-
-                if (rect.Bottom > maxPanelHeight)
-                    maxPanelHeight = rect.Bottom;
-
+                _itemBoundsCache[index] = new Rect(x, y, actualColumnWidth, itemHeight);
+                _columnNextY[columnIndex] = y + itemHeight + rowSpacing;
                 index++;
             }
 
-            _itemCacheCount = index;
-            return new Size(availableSize.Width, maxPanelHeight);
-        }
+            _itemBoundsCacheCount = index;
 
-        private void FindPosition(int columns, int colSpan, int rowSpan, out int startRow, out int startCol)
-        {
-            startRow = 0;
-            startCol = 0;
-            int currentRow = _firstFreeRow;
-
-            while (true)
+            double maxHeight = 0;
+            for (int i = 0; i < columnCount; i++)
             {
-                EnsureOccupiedGridRows(currentRow + rowSpan, columns);
-
-                for (int c = 0; c <= columns - colSpan; c++)
-                {
-                    bool fits = true;
-                    for (int r = 0; r < rowSpan && fits; r++)
-                    {
-                        for (int k = 0; k < colSpan && fits; k++)
-                        {
-                            int idx = (currentRow + r) * columns + (c + k);
-                            if (_occupiedGrid[idx])
-                            {
-                                fits = false;
-                            }
-                        }
-                    }
-
-                    if (fits)
-                    {
-                        startRow = currentRow;
-                        startCol = c;
-                        return;
-                    }
-                }
-                currentRow++;
-            }
-        }
-
-        private void MarkOccupied(int columns, int startRow, int startCol, int rowSpan, int colSpan)
-        {
-            EnsureOccupiedGridRows(startRow + rowSpan, columns);
-
-            for (int r = 0; r < rowSpan; r++)
-            {
-                for (int c = 0; c < colSpan; c++)
-                {
-                    int rIndex = startRow + r;
-                    int idx = rIndex * columns + (startCol + c);
-                    _occupiedGrid[idx] = true;
-                    if (idx > _maxDirtyIndex) _maxDirtyIndex = idx;
-                    _rowOccupiedCount[rIndex]++;
-                }
+                double colHeight = _columnNextY[i] - rowSpacing;
+                if (colHeight > maxHeight)
+                    maxHeight = colHeight;
             }
 
-
-            // Update first free row if the current one is full
-            while (_firstFreeRow < _occupiedGridRows && _rowOccupiedCount[_firstFreeRow] >= columns)
-            {
-                _firstFreeRow++;
-            }
-        }
-
-        private void ClearOccupiedGrid()
-        {
-            if (_maxDirtyIndex >= 0)
-            {
-                int lengthToClear = Math.Min(_maxDirtyIndex + 1, _occupiedGrid.Length);
-                _occupiedGrid.AsSpan(0, lengthToClear).Clear();
-                _maxDirtyIndex = -1;
-            }
-
-            if (_occupiedGridRows > 0)
-            {
-                Array.Clear(_rowOccupiedCount, 0, _occupiedGridRows);
-            }
-            _occupiedGridRows = 0;
-        }
-
-        private void EnsureOccupiedGridRows(int rows, int columns)
-        {
-            if (rows <= _occupiedGridRows)
-                return;
-
-            int required = rows * columns;
-            if (_occupiedGrid.Length < required)
-            {
-                int newSize = Math.Max(required, _occupiedGrid.Length * 2);
-                Array.Resize(ref _occupiedGrid, newSize);
-                // Also resize row counts
-                Array.Resize(ref _rowOccupiedCount, newSize / columns + 1);
-            }
-            // Ensure row count array is large enough even if grid was large enough
-            if (_rowOccupiedCount.Length < rows)
-            {
-                 Array.Resize(ref _rowOccupiedCount, Math.Max(rows, _rowOccupiedCount.Length * 2));
-            }
-
-            // Clear new rows only
-            int startIdx = _occupiedGridRows * columns;
-            int endIdx = rows * columns;
-            if (endIdx > startIdx)
-            {
-                _occupiedGrid.AsSpan(startIdx, endIdx - startIdx).Clear();
-                int rowsToClear = rows - _occupiedGridRows;
-                if (rowsToClear > 0)
-                    Array.Clear(_rowOccupiedCount, _occupiedGridRows, rowsToClear);
-            }
-            _occupiedGridRows = rows;
+            return new Size(totalWidth, Math.Max(0, maxHeight));
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -567,13 +416,12 @@ namespace Nova.Avalonia.UI.Controls
 
             try
             {
-                // Virtualized mode
                 foreach (var kvp in _indexToContainer)
                 {
                     int index = kvp.Key;
                     var container = kvp.Value;
 
-                    if (index >= 0 && index < _itemCacheCount)
+                    if (index >= 0 && index < _itemBoundsCacheCount)
                     {
                         var rect = _itemBoundsCache[index];
                         container.Arrange(rect);
@@ -586,12 +434,12 @@ namespace Nova.Avalonia.UI.Controls
                 }
 
                 // Non-virtualized mode fallback
-                if (_indexToContainer.Count == 0 && _itemCacheCount > 0)
+                if (_indexToContainer.Count == 0 && _itemBoundsCacheCount > 0)
                 {
                     int index = 0;
                     foreach (var child in Children)
                     {
-                        if (child is Control control && index < _itemCacheCount)
+                        if (child is Control control && index < _itemBoundsCacheCount)
                         {
                             control.Arrange(_itemBoundsCache[index]);
                             index++;
@@ -612,6 +460,7 @@ namespace Nova.Avalonia.UI.Controls
             if (ItemContainerGenerator is not { } generator)
                 return null;
 
+            // Return existing container
             if (_indexToContainer.TryGetValue(index, out var existing))
             {
                 existing.SetCurrentValue(Visual.IsVisibleProperty, true);
@@ -729,6 +578,7 @@ namespace Nova.Avalonia.UI.Controls
                 }
             }
 
+            // Recycle them
             foreach (var index in _toRecycle)
             {
                 if (_indexToContainer.TryGetValue(index, out var container))
@@ -773,24 +623,58 @@ namespace Nova.Avalonia.UI.Controls
             }
         }
 
-        private void EnsureCaches(int itemCount)
+        private int CalculateColumnCount(double totalWidth, double desiredColumnWidth, double columnSpacing)
+        {
+            double denominator = desiredColumnWidth + columnSpacing;
+            if (denominator <= 0) return 1;
+            int count = (int)Math.Floor((totalWidth + columnSpacing) / denominator);
+            return Math.Max(1, count);
+        }
+
+        private double CalculateActualColumnWidth(double totalWidth, int columnCount, double columnSpacing)
+        {
+            return (totalWidth - (columnCount - 1) * columnSpacing) / columnCount;
+        }
+
+        private void EnsureColumnArrays(int columnCount)
+        {
+            if (_columnNextY.Length < columnCount)
+            {
+                _columnNextY = new double[columnCount];
+            }
+        }
+
+        private void EnsureBoundsCache(int itemCount)
         {
             if (_itemBoundsCache.Length < itemCount)
             {
                 int newSize = Math.Max(itemCount, _itemBoundsCache.Length * 2);
                 Array.Resize(ref _itemBoundsCache, newSize);
-                Array.Resize(ref _cachedColSpans, newSize);
-                Array.Resize(ref _cachedRowSpans, newSize);
             }
         }
 
-        private void ClearCaches()
+        private void ClearBoundsCache()
         {
-            Array.Clear(_itemBoundsCache, 0, _itemCacheCount);
-            Array.Clear(_cachedColSpans, 0, _itemCacheCount);
-            Array.Clear(_cachedRowSpans, 0, _itemCacheCount);
-            _itemCacheCount = 0;
-            _lastMeasureWidth = -1;
+            Array.Clear(_itemBoundsCache, 0, _itemBoundsCacheCount);
+            _itemBoundsCacheCount = 0;
+        }
+
+        private int GetShortestColumn(int columnCount)
+        {
+            var columns = _columnNextY.AsSpan(0, columnCount);
+            int shortestIndex = 0;
+            double minHeight = columns[0];
+
+            for (int i = 1; i < columnCount; i++)
+            {
+                if (columns[i] < minHeight)
+                {
+                    minHeight = columns[i];
+                    shortestIndex = i;
+                }
+            }
+
+            return shortestIndex;
         }
 
         protected override Control? ContainerFromIndex(int index)
@@ -811,7 +695,45 @@ namespace Nova.Avalonia.UI.Controls
 
         protected override Control? GetControl(NavigationDirection direction, IInputElement? from, bool wrap)
         {
-            return null;
+            int count = Items.Count;
+            var fromControl = from as Control;
+
+            if (count == 0 || (fromControl is null && direction is not NavigationDirection.First and not NavigationDirection.Last))
+                return null;
+
+            int fromIndex = fromControl != null ? IndexFromContainer(fromControl) : -1;
+            int toIndex = fromIndex;
+
+            switch (direction)
+            {
+                case NavigationDirection.First:
+                    toIndex = 0;
+                    break;
+                case NavigationDirection.Last:
+                    toIndex = count - 1;
+                    break;
+                case NavigationDirection.Next:
+                case NavigationDirection.Down:
+                    toIndex++;
+                    break;
+                case NavigationDirection.Previous:
+                case NavigationDirection.Up:
+                    toIndex--;
+                    break;
+            }
+
+            if (fromIndex == toIndex)
+                return fromControl;
+
+            if (wrap)
+            {
+                if (toIndex < 0)
+                    toIndex = count - 1;
+                else if (toIndex >= count)
+                    toIndex = 0;
+            }
+
+            return ScrollIntoView(toIndex);
         }
 
         protected override Control? ScrollIntoView(int index)
@@ -819,7 +741,7 @@ namespace Nova.Avalonia.UI.Controls
             if (_isInLayout || index < 0 || index >= Items.Count)
                 return null;
 
-            if (index < _itemCacheCount)
+            if (index < _itemBoundsCacheCount)
             {
                 var element = GetOrCreateContainer(Items, index);
                 element?.BringIntoView();

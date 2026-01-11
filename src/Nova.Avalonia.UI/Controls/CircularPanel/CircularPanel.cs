@@ -168,41 +168,45 @@ public class CircularPanel : Panel
         var centerX = finalSize.Width / 2;
         var centerY = finalSize.Height / 2;
 
-        var visibleChildren = Children.Where(c => c.IsVisible).ToList();
+        int visibleCount = 0;
+        foreach (var child in Children)
+        {
+            if (child.IsVisible) visibleCount++;
+        }
+
         var autoAngle = AngleStep;
         if (double.IsNaN(autoAngle) || autoAngle == 0)
         {
-            autoAngle = visibleChildren.Count > 0 ? 360.0 / visibleChildren.Count : 0;
+            autoAngle = visibleCount > 0 ? 360.0 / visibleCount : 0;
         }
 
         var currentAngle = StartAngle;
         var angleMultiplier = SweepDirection == SweepDirection.Clockwise ? 1 : -1;
 
-        foreach (var child in visibleChildren)
+        foreach (var child in Children)
         {
-            // Get child-specific angle or use current auto angle
+            if (!child.IsVisible) continue;
+
+
             var angle = GetAngle(child);
             if (double.IsNaN(angle))
             {
                 angle = currentAngle;
                 currentAngle += autoAngle * angleMultiplier;
             }
-
-            // Get child-specific radius or use default
+            
             var radius = GetItemRadius(child);
             if (double.IsNaN(radius))
                 radius = Radius;
-
-            // Calculate position
+            
             var angleRad = angle * Math.PI / 180.0;
             var x = centerX + radius * Math.Cos(angleRad);
             var y = centerY + radius * Math.Sin(angleRad);
 
-            // Apply alignment
+
             var alignment = GetAlignment(child);
             var childRect = CalculateChildRect(child, x, y, alignment, angleRad);
-
-            // Keep in bounds if requested
+            
             if (KeepInBounds)
             {
                 childRect = ClampToBounds(childRect, finalSize);

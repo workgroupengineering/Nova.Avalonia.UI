@@ -89,16 +89,14 @@ public class ArcPanel : Panel
             maxChildSize = Math.Max(maxChildSize, Math.Max(child.DesiredSize.Width, child.DesiredSize.Height));
         }
 
-        // Calculate bounding box based on arc
         double totalRadius = Radius + maxChildSize / 2;
         
-        // For a partial arc, we need to calculate the actual bounds
+        // Normalize angles
         double startRad = StartAngle * Math.PI / 180.0;
         double endRad = (StartAngle + SweepAngle) * Math.PI / 180.0;
 
         double minX = 0, maxX = 0, minY = 0, maxY = 0;
-
-        // Check endpoints and cardinal points within range
+        
         var angles = new[] { startRad, endRad };
         var cardinals = new[] { 0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI };
 
@@ -111,8 +109,7 @@ public class ArcPanel : Panel
             minY = Math.Min(minY, y);
             maxY = Math.Max(maxY, y);
         }
-
-        // Add center point
+        
         minX = Math.Min(minX, 0);
         maxX = Math.Max(maxX, 0);
         minY = Math.Min(minY, 0);
@@ -123,21 +120,26 @@ public class ArcPanel : Panel
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var visibleChildren = Children.Where(c => c.IsVisible).ToList();
-        if (visibleChildren.Count == 0)
+        int visibleCount = 0;
+        foreach (var child in Children)
+        {
+            if (child.IsVisible) visibleCount++;
+        }
+
+        if (visibleCount == 0)
             return finalSize;
 
         var centerX = finalSize.Width / 2;
         var centerY = finalSize.Height / 2;
 
         double angleStep;
-        if (DistributeEvenly && visibleChildren.Count > 1)
+        if (DistributeEvenly && visibleCount > 1)
         {
-            angleStep = SweepAngle / (visibleChildren.Count - 1);
+            angleStep = SweepAngle / (visibleCount - 1);
         }
-        else if (visibleChildren.Count > 1)
+        else if (visibleCount > 1)
         {
-            angleStep = SweepAngle / visibleChildren.Count;
+            angleStep = SweepAngle / visibleCount;
         }
         else
         {
@@ -146,8 +148,10 @@ public class ArcPanel : Panel
 
         double currentAngle = StartAngle;
 
-        foreach (var child in visibleChildren)
+        foreach (var child in Children)
         {
+            if (!child.IsVisible) continue;
+
             var angleRad = currentAngle * Math.PI / 180.0;
             var x = centerX + Radius * Math.Cos(angleRad) - child.DesiredSize.Width / 2;
             var y = centerY + Radius * Math.Sin(angleRad) - child.DesiredSize.Height / 2;

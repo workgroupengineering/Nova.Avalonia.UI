@@ -157,19 +157,19 @@ public class StaggeredPanel : Panel
     {
         int count = 1;
 
-        if (double.IsInfinity(availableWidth) || double.IsNaN(availableWidth))
-        {
-            count = 1;
-        }
-        else if (desiredWidth + spacing > 0)
-        {
-            count = Math.Max(1, (int)((availableWidth + spacing) / (desiredWidth + spacing)));
-        }
-
         double actualWidth = desiredWidth;
-        if (!double.IsInfinity(availableWidth) && !double.IsNaN(availableWidth) && count > 0)
+        double denominator = desiredWidth + spacing;
+        if (!double.IsInfinity(availableWidth) && !double.IsNaN(availableWidth))
         {
-            actualWidth = Math.Max(1, (availableWidth - (count - 1) * spacing) / count);
+            if (denominator > 0)
+            {
+                count = Math.Max(1, (int)((availableWidth + spacing) / denominator));
+            }
+            
+            if (count > 0)
+            {
+                actualWidth = Math.Max(1, (availableWidth - (count - 1) * spacing) / count);
+            }
         }
 
         return (count, actualWidth);
